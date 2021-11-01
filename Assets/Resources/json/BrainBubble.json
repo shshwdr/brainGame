@@ -1,0 +1,49 @@
+{
+    "actionBubble":
+    [
+      {
+        "name": "makeGame",
+        "displayName":"做游戏",
+        "logs":[
+          "你突然冒出一个念头，你想做一个游戏",
+          "可能生活太无聊了，你突然想做一个游戏"
+        ],
+        "successResults":[
+          {
+            "logs":[
+              "你决定做一个游戏，下面需要认真思考一下游戏的玩法了"
+            ]
+          }
+        ],
+        "failedResults":[
+          {
+            "logs":[
+              "做游戏可能还是太难了，还是打游戏吧=。=",
+              "一觉醒来觉得做游戏还是太不现实了，还是先搬砖吧。"
+            ]
+          }
+        ],
+        "duration":10,
+
+        "ingredients":[
+          {
+            "name":"passion",
+            "logs":[
+              "你幻想着你的游戏的样子夜不能寐",
+              "这个游戏太好玩了，它一定会受欢迎的！你坚信"
+            ],
+            "addValue":1
+          }
+        ]
+      }
+    ],
+    "ingredientBubble":
+    [
+      {
+        "name": "passion",
+        "displayName":"激情",
+        "description":"激情",
+        "":""
+      }
+    ]
+  }
