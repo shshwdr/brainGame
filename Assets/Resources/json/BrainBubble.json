@@ -4,15 +4,22 @@
       {
         "name": "makeGame",
         "displayName":"做游戏",
+        "possibility":1,
         "logs":[
           "你突然冒出一个念头，你想做一个游戏",
-          "可能生活太无聊了，你突然想做一个游戏"
+          "可能生活太无聊了，你突然想做一个游戏",
+          "平凡的一天，平凡的你，突然想要做一个不平凡的游戏"
         ],
         "successResults":[
           {
             "logs":[
-              "你决定做一个游戏，下面需要认真思考一下游戏的玩法了"
-            ]
+              "你决定做一个游戏，下面需要认真思考一下游戏的玩法了",
+              "决定了，这次一定要做一个游戏出来！（握拳"
+            ],
+            "rewards":[
+              "gameIdea"
+            ],
+            "possibility":1
           }
         ],
         "failedResults":[
@@ -20,19 +27,191 @@
             "logs":[
               "做游戏可能还是太难了，还是打游戏吧=。=",
               "一觉醒来觉得做游戏还是太不现实了，还是先搬砖吧。"
-            ]
+            ],
+            "rewards":[
+              "sad","sad"
+            ],
+            "possibility":1
+          },
+          {
+            "logs":[
+              "你认为这不是一个足够好的时机，也许过段时间再试试",
+              "最近工作很忙，没有时间做游戏，等之后有了时间再试试吧"
+            ],
+            "rewards":[
+              "sad","passion"
+            ],
+            "possibility":1
           }
         ],
-        "duration":10,
+        "duration":20,
 
         "ingredients":[
           {
             "name":"passion",
             "logs":[
               "你幻想着你的游戏的样子夜不能寐",
-              "这个游戏太好玩了，它一定会受欢迎的！你坚信"
+              "这个游戏太好玩了，它一定会受欢迎的！你坚信",
+              "这也许是做游戏中最美好的阶段，就像恋爱中的暧昧阶段一样，充满激情"
             ],
+            "possibility":1,
+
+            "addValue":0.5
+          },
+          {
+            "name":"bored",
+            "logs":[
+              "你想着想着突然觉得这个游戏也没什么意思",
+              "有点无聊。做游戏也没什么意思吧"
+            ],
+            "possibility":1,
+            "addValue":-0.1
+          },
+          {
+            "name":"sad",
+            "logs":[
+              "你会想起了你以前做游戏的失败经历。。。啊不想做了",
+              "做游戏有什么意义呢，做了也做不完，做完了也发布不了，发布了也不挣钱，挣钱了也挣不久"
+            ],
+            "possibility":1,
+            "addValue":-0.5
+          }
+        ]
+      },
+      {
+        "name": "gameIdea",
+        "displayName":"设计玩法",
+        "possibility":0,
+        "logs":[
+          "你开始设计游戏的玩法"
+        ],
+        "successResults":[
+          {
+            "logs":[
+              "你设计了一个游戏玩法，你觉得很有意思。。下面该干啥"
+            ],
+            "rewards":[
+            ],
+            "possibility":1
+          }
+        ],
+        "failedResults":[
+          {
+            "logs":[
+              "做游戏可能还是太难了，还是打游戏吧=。=",
+              "一觉醒来觉得做游戏还是太不现实了，还是先搬砖吧。"
+            ],
+            "rewards":[
+              "sad","sad","makeGame"
+            ],
+            "possibility":1
+          },
+          {
+            "logs":[
+              "你没想出来一个好的游戏玩法，也许过段时间再试试",
+              "最近工作很忙，没有时间做游戏，等之后有了时间再试试吧"
+            ],
+            "rewards":[
+              "sad","passion","makeGame"
+            ],
+            "possibility":1
+          }
+        ],
+        "duration":40,
+
+        "ingredients":[
+          {
+            "name":"passion",
+            "logs":[
+              "你幻想着你的游戏的样子夜不能寐",
+              "这个玩法绝了，它一定会受欢迎的！你坚信",
+              "这也许是做游戏中最美好的阶段，就像恋爱中的暧昧阶段一样，充满激情"
+            ],
+            "possibility":1,
+
+            "addValue":0.3
+          },
+          {
+            "name":"bored",
+            "logs":[
+              "你设计着玩法突然觉得这个游戏也没什么意思",
+              "有点无聊。所有玩法都已经被设计完了，自己在干啥呢"
+            ],
+            "possibility":1,
+            "addValue":-0.1
+          },
+          {
+            "name":"sad",
+            "logs":[
+              "你会想起了你以前做游戏的失败经历。。。啊不想做了",
+              "做游戏有什么意义呢，做了也做不完，做完了也发布不了，发布了也不挣钱，挣钱了也挣不久"
+            ],
+            "possibility":1,
+            "addValue":-0.5
+          }
+        ]
+      },
+      {
+        "name": "eat",
+        "displayName":"吃饭",
+        "possibility":1,
+        "logs":[
+          "人都要吃饭，早上要吃饭，中午要吃饭，晚上要吃饭",
+          "吾三省吾身，早上吃什么，中午吃什么，晚上吃什么",
+          "饿了，吃点啥"
+        ],
+        "successResults":[
+          {
+            "logs":[
+              "吃饱饭了，精神抖擞继续开工！",
+              "干饭人干饭魂，干饭都是人上人！"
+            ],
+            "rewards":[
+              "passion"
+            ],
+            "possibility":1
+          }
+        ],
+        "failedResults":[
+          {
+            "logs":[
+              "吃了，但又没完全吃",
+              "好像没吃饱。。。",
+              "吃饱了，诶您猜怎么着，困了。。"
+            ],
+            "rewards":[
+              "sad"
+            ],
+            "possibility":1
+          }
+        ],
+        "duration":20,
+
+        "ingredients":[
+          {
+            "name":"passion",
+            "logs":[
+              "吃！吃个大的！"
+            ],
+            "possibility":1,
+
             "addValue":1
+          },
+          {
+            "name":"bored",
+            "logs":[
+              "你一边吃饭一边刷起了手机，吃了好久都没注意时间"
+            ],
+            "possibility":1,
+            "addValue":1
+          },
+          {
+            "name":"sad",
+            "logs":[
+              "一边消化饭一边消化生活中遇到的伤心事，有点难以消化T-T"
+            ],
+            "possibility":1,
+            "addValue":0.5
           }
         ]
       }
@@ -42,8 +221,16 @@
       {
         "name": "passion",
         "displayName":"激情",
-        "description":"激情",
-        "":""
+        "possibility":1
+      },{
+        "name": "bored",
+        "displayName":"无聊",
+        "possibility":1
+      },
+      {
+        "name": "sad",
+        "displayName":"伤心",
+        "possibility":0.3
       }
     ]
   }

@@ -9,7 +9,7 @@ public class ActionBubble : Bubble
     
     public void consumeIngredient(IngredientBubble ing, ActionSlot slot)
     {
-        currentValue += info.ingredients[0].addValue;
+        currentValue += info.ingredientDict[ing.info.name].addValue;
         if (currentValue >= 1)
         {
             succeed();
@@ -23,19 +23,28 @@ public class ActionBubble : Bubble
         info = (ActionBubbleInfo)inf;
         isActionBubble = true;
     }
-
+    public void getReward(List<string> rewards)
+    {
+        foreach(string rew in rewards)
+        {
+            BubbleManager.Instance.specificBubbleGeneration(rew);
+        }
+    }
     public void succeed()
     {
-        var successLogs = info.successResults[0].logs;
-        LogController.Instance.addLog(successLogs[Random.Range(0, successLogs.Length)]);
+        var pickedResult = (ActionResult)BubbleManager.pickInfoWithProbability(info.successResults);
+        var successLogs = pickedResult.logs;
+        LogController.Instance.addLog(successLogs[Random.Range(0, successLogs.Length)], Color.green);
+        getReward(pickedResult.rewards);
         Destroy(gameObject);
     }
 
     public void failed()
     {
-
-        var failedLogs = info.failedResults[0].logs;
-        LogController.Instance.addLog(failedLogs[Random.Range(0, failedLogs.Length)]);
+        var pickedResult =(ActionResult) BubbleManager.pickInfoWithProbability(info.failedResults);
+        var failedLogs = pickedResult.logs;
+        LogController.Instance.addLog(failedLogs[Random.Range(0, failedLogs.Length)],Color.red);
+        getReward(pickedResult.rewards);
         Destroy(gameObject);
     }
 

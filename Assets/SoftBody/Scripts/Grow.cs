@@ -23,31 +23,31 @@ public class Grow : MonoBehaviour {
             HSV(Random.value, 0.99f, 0.99f);
         transform = GetComponent<Transform>();
         rigidbody = GetComponent<Rigidbody2D>();
-        rigidbody.isKinematic = true;
+        //rigidbody.isKinematic = true;
         startTime = Time.time;
         startScale = transform.localScale.x;
         startMass = rigidbody.mass;
     }
 
     void Update() {
-        if (growing) {
-            if (Input.GetMouseButtonUp(Left)) {
-                StopGrowing();
-                return;
-            }
+    //    if (growing) {
+    //        if (Input.GetMouseButtonUp(Left)) {
+    //            StopGrowing();
+    //            return;
+    //        }
 
-            float time = Time.time - startTime;
-            float growth = Mathf.Log(time / (1 / acceleration) + 1);
-            float scale = scaleStep * growth + startScale;
-            transform.localScale = new Vector2(scale, scale);
-            rigidbody.mass = massStep * growth + startMass;
+    //        float time = Time.time - startTime;
+    //        float growth = Mathf.Log(time / (1 / acceleration) + 1);
+    //        float scale = scaleStep * growth + startScale;
+    //        transform.localScale = new Vector2(scale, scale);
+    //        rigidbody.mass = massStep * growth + startMass;
 
-            Vector3 targetPosition =
-                (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = Vector3.SmoothDamp(transform.position,
-                    targetPosition, ref velocity, movementSmoothTime,
-                    movementMaxSpeed);
-        }
+    //        Vector3 targetPosition =
+    //            (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //        transform.position = Vector3.SmoothDamp(transform.position,
+    //                targetPosition, ref velocity, movementSmoothTime,
+    //                movementMaxSpeed);
+    //    }
     }
 
     void StopGrowing() {
@@ -56,9 +56,9 @@ public class Grow : MonoBehaviour {
     }
 
     void OnCollisionEnter2D(Collision2D collision) {
-        if (growing) {
-            StopGrowing();
-        }
+        //if (growing) {
+        //    StopGrowing();
+        //}
     }
 
     Color HSV(float h, float s, float v) {

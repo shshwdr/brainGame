@@ -6,6 +6,18 @@ public class Blob : MonoBehaviour {
         void OnCollisionEnter2D(Collision2D collision) {
             transform.parent.SendMessage("OnCollisionEnter2D", collision);
         }
+        //private void OnMouseDown()
+        //{
+        //    transform.parent.SendMessage("OnMouseDown");
+        //}
+        //private void OnMouseDrag()
+        //{
+        //    transform.parent.SendMessage("OnMouseDrag");
+        //}
+        //private void OnMouseUp()
+        //{
+        //    transform.parent.SendMessage("OnMouseUp");
+        //}
     }
 
     public int width = 5;

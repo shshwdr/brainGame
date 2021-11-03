@@ -8,6 +8,7 @@ public class ActionSlot : MonoBehaviour
 {
     ActionBubble actionBubble;
     public Image overlayImage;
+    Coroutine coroutine;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,19 +25,20 @@ public class ActionSlot : MonoBehaviour
     {
         actionBubble = null;
         overlayImage.gameObject.SetActive(false);
-        DOTween.KillAll();
-        StopAllCoroutines();
+        DOTween.Kill(overlayImage.fillAmount);
+        StopCoroutine(coroutine);
     }
 
     public void attachAction(ActionBubble bubble)
     {
         actionBubble = bubble;
-        LogController.Instance.addLog(bubble.info.logs[Random.Range(0, bubble.info.logs.Length)]);
+        LogController.Instance.addLog(bubble.info.logs[Random.Range(0, bubble.info.logs.Length)], Color.yellow);
         overlayImage.gameObject.SetActive(true);
         overlayImage.fillAmount = 0;
+        Debug.Log("attach action " + actionBubble.info.name + " " + actionBubble.info.duration);
         DOTween.To(() => overlayImage.fillAmount, x => overlayImage.fillAmount = x, 1, actionBubble.info.duration);
 
-        StartCoroutine(finishAction(actionBubble.info.duration));
+        coroutine = StartCoroutine(finishAction(actionBubble.info.duration));
     }
 
 
@@ -53,8 +55,9 @@ public class ActionSlot : MonoBehaviour
     void consumeIngredient(IngredientBubble bubble)
     {
         Destroy(bubble.gameObject);
-        var actionBubbleLogs = actionBubble.info.ingredients[0].logs;
-        LogController.Instance.addLog(actionBubbleLogs[Random.Range(0, actionBubbleLogs.Length)]);
+        var actionBubbleLogs = actionBubble.info.ingredientDict[bubble.info.name].logs;
+        var addValue = actionBubble.info.ingredientDict[bubble.info.name].addValue;
+        LogController.Instance.addLog(actionBubbleLogs[Random.Range(0, actionBubbleLogs.Length)], addValue>0 ?Color.white:Color.grey);
         actionBubble.consumeIngredient(bubble,this);
     }
 

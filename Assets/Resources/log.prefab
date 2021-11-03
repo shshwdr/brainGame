@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logLabel: {fileID: 747817268274092104}
+  panelImage: {fileID: 747817267473614450}
 --- !u!1 &747817268274092102
 GameObject:
   m_ObjectHideFlags: 0

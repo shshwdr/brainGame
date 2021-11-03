@@ -15,11 +15,11 @@ public class LogController : Singleton<LogController>
     {
         scrollRect.normalizedPosition = new Vector2(0, 0);
     }
-    public void addLog(string str)
+    public void addLog(string str,Color color)
     {
         var logPrefab = Resources.Load<GameObject>("log");
         var go = Instantiate(logPrefab);
-        go.GetComponent<LogPanel>().init(str);
+        go.GetComponent<LogPanel>().init(str,color);
         go.transform.parent = content;
 
         StartCoroutine(test());
