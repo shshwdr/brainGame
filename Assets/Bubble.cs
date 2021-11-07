@@ -62,6 +62,15 @@ public class Bubble : MonoBehaviour
         transform.position = (fingerPosition );
         prevFingerPosition = fingerPosition;
     }
+
+    public void attachToSlot(ActionSlot slot)
+    {
+
+        collider.enabled = false;
+        rb.Sleep();
+        transform.parent = slot.transform;
+
+    }
     private void OnMouseUp()
     {
         foreach(var collider in Physics2D.OverlapCircleAll(transform.position, collider.radius))
@@ -70,7 +79,6 @@ public class Bubble : MonoBehaviour
             if (slot && slot.canTakeBubble(this))
             {
                 slot.takeBubble(this);
-                transform.position = slot.transform.position;
                 return;
             }
         }

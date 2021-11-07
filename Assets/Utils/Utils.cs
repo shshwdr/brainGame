@@ -10,7 +10,10 @@ public class Utils : MonoBehaviour
     static public Vector2[] dir5V2 = { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(0, 1), new Vector2(0, 0), };
 
    
-
+    public static  T randomFromList<T>(List<T> list)
+    {
+        return list[Random.Range(0, list.Count)];
+    }
     T CopyComponent<T>(T original, GameObject destination) where T : Component
     {
         System.Type type = original.GetType();

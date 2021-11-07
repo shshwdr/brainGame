@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class IngredientBubble : Bubble
 {
-    public IngredientBubbleInfo info;
+    public EmotionBubbleInfo info;
     public override void init(BubbleInfo inf)
     {
         base.init(inf);
-        info = (IngredientBubbleInfo)inf;
+        info = (EmotionBubbleInfo)inf;
         GetComponent<SpriteRenderer>().color = Color.blue;
     }
     // Start is called before the first frame update

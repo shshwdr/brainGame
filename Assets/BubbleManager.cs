@@ -1,4 +1,5 @@
 using LitJson;
+using Sinbad;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,101 +8,73 @@ using UnityEngine;
 public class BaseInfo
 {
     public string name;
-}
-
-public class BaseInfoWithProbability:BaseInfo
-{
-    public float possibility;
-}
-public class ActionIngredientResult:BaseInfoWithProbability
-{
-
-    public string[] logs;
-    public float addValue;
-}
-
-public class ActionResult: BaseInfoWithProbability
-{
-    public string[] logs;
-    public List<string> rewards;
-}
-
-public class BubbleInfo: BaseInfoWithProbability
-{
     public string displayName;
-
 }
-public class ActionBubbleInfo: BubbleInfo
+
+public class BubbleInfo:BaseInfo
 {
-    public string[] logs;
-    public ActionIngredientResult[] ingredients;
-    public Dictionary<string, ActionIngredientResult> ingredientDict;
-
-    public ActionResult[] successResults;
-
-    public ActionResult[] failedResults;
-    public float duration;
 
 }
-public class IngredientBubbleInfo: BubbleInfo
+
+public class ActionBubbleInfo:BubbleInfo
+{
+    public List<string> log;
+    public Dictionary<string, float> successAttribute;
+    public Dictionary<string, float> failedAttribute;
+}
+
+
+public class EmotionBubbleInfo: BubbleInfo
 {
 }
 
-public class AllBubblesInfo
-{
-    public List<ActionBubbleInfo> actionBubble;
-    public List<IngredientBubbleInfo> ingredientBubble;
-}
 
 public class BubbleManager : Singleton<BubbleManager>
 {
-    public static BaseInfoWithProbability pickInfoWithProbability<T>(T[] list) where T : BaseInfoWithProbability
-    {
-        List<float> probabilityList = new List<float>();
-        float maxProb = 0;
-        foreach (var info in list)
-        {
-            maxProb += info.possibility;
-            probabilityList.Add(maxProb);
-        }
-        float rand = Random.Range(0f, maxProb);
-        for (int i = 0; i < list.Length; i++)
-        {
-            if (rand <= probabilityList[i])
-            {
-                return list[i];
-            }
-        }
-        Debug.LogError("pickInfoWithProbability reached somewhere wrong " + rand + " " + maxProb);
-        return list[0];
-    }
-        public static BaseInfoWithProbability pickInfoWithProbability<T>(List<T> list) where T : BaseInfoWithProbability
-    {
-        return pickInfoWithProbability(list.ToArray());
-    }
+
+
+    public List<ActionBubbleInfo> actionBubbles;
+    public List<EmotionBubbleInfo> emotionBubbles;
+    //public static BaseInfoWithProbability pickInfoWithProbability<T>(T[] list) where T : BaseInfoWithProbability
+    //{
+    //    List<float> probabilityList = new List<float>();
+    //    float maxProb = 0;
+    //    foreach (var info in list)
+    //    {
+    //        maxProb += info.possibility;
+    //        probabilityList.Add(maxProb);
+    //    }
+    //    float rand = Random.Range(0f, maxProb);
+    //    for (int i = 0; i < list.Length; i++)
+    //    {
+    //        if (rand <= probabilityList[i])
+    //        {
+    //            return list[i];
+    //        }
+    //    }
+    //    Debug.LogError("pickInfoWithProbability reached somewhere wrong " + rand + " " + maxProb);
+    //    return list[0];
+    //}
+
     public Transform generateTransform;
     public Dictionary<string, ActionBubbleInfo> actionBubbleInfoDict = new Dictionary<string, ActionBubbleInfo>();
-    public Dictionary<string, IngredientBubbleInfo> ingredientBubbleInfoDict = new Dictionary<string, IngredientBubbleInfo>();
+    public Dictionary<string, EmotionBubbleInfo> emotionBubbleInfoDict = new Dictionary<string, EmotionBubbleInfo>();
 
     public float generateTime = 2;
     float currentGenerateTime = 0;
 
     void Awake()
     {
-        string text = Resources.Load<TextAsset>("json/BrainBubble").text;
-        var allNPCs = JsonMapper.ToObject<AllBubblesInfo>(text);
-        foreach (var info in allNPCs.actionBubble)
+        actionBubbles = CsvUtil.LoadObjects<ActionBubbleInfo>("Idea.csv");
+        foreach (var info in actionBubbles)
         {
             actionBubbleInfoDict[info.name] = info;
-            info.ingredientDict = new Dictionary<string, ActionIngredientResult>();
-            foreach(var ingredient in info.ingredients)
-            {
-                info.ingredientDict[ingredient.name] = ingredient;
-            }
         }
-        foreach (var info in allNPCs.ingredientBubble)
+
+        emotionBubbles = CsvUtil.LoadObjects<EmotionBubbleInfo>("Emotion.csv");
+        foreach (var info in emotionBubbles)
         {
-            ingredientBubbleInfoDict[info.name] = info;
+            emotionBubbleInfoDict[info.name] = info;
         }
     }
 
@@ -117,26 +90,36 @@ public class BubbleManager : Singleton<BubbleManager>
         //var go = Instantiate(bubblePrefab, getPosition(), Quaternion.identity, transform);
     }
 
-    public void actionBubbleGeneration(ActionBubbleInfo bubbleInfo)
+    public Bubble actionBubbleGeneration(ActionBubbleInfo bubbleInfo, Vector3 position)
     {
         rabbishGeneration();
         var rand = Random.Range(0, actionBubbleInfoDict.Count);
         var bubblePrefab = Resources.Load<GameObject>("actionBubble");
-        var go = Instantiate(bubblePrefab, getPosition(), Quaternion.identity, transform);
+        if(position == Vector3.positiveInfinity)
+        {
+            position = getPosition();
+        }
+        var go = Instantiate(bubblePrefab, position, Quaternion.identity, transform);
+        Bubble result = go.GetComponent<Bubble>();
+        result.init(bubbleInfo);
+        return result;
+    }
 
-        go.GetComponent<Bubble>().init(bubbleInfo);
+    public Bubble actionBubbleGeneration(ActionBubbleInfo bubbleInfo)
+    {
+        return actionBubbleGeneration(bubbleInfo, Vector3.positiveInfinity);
     }
     public void actionBubbleGeneration()
     {
 
-        var actionsBubbleList = actionBubbleInfoDict.Values.ToList();
-        var picked = pickInfoWithProbability(actionsBubbleList);
+        //var actionsBubbleList = actionBubbleInfoDict.Values.ToList();
+        //var picked = pickInfoWithProbability(actionsBubbleList);
 
-        actionBubbleGeneration((ActionBubbleInfo) picked);
+        //actionBubbleGeneration((ActionBubbleInfo) picked);
     }
 
 
-    public void ingredientBubbleGeneration(IngredientBubbleInfo bubbleInfo)
+    public Bubble ingredientBubbleGeneration(EmotionBubbleInfo bubbleInfo)
     {
 
         var bubblePrefab = Resources.Load<GameObject>("ingredientBubble");
@@ -144,39 +127,41 @@ public class BubbleManager : Singleton<BubbleManager>
 
 
         go.GetComponent<Bubble>().init(bubbleInfo);
+        return go.GetComponent<Bubble>();
     }
     public void ingredientBubbleGeneration()
     {
 
 
 
-        var actionsBubbleList = ingredientBubbleInfoDict.Values.ToList();
-        var picked = pickInfoWithProbability(actionsBubbleList);
+        //var actionsBubbleList = ingredientBubbleInfoDict.Values.ToList();
+        //var picked = pickInfoWithProbability(actionsBubbleList);
 
-        ingredientBubbleGeneration((IngredientBubbleInfo)picked);
+        //ingredientBubbleGeneration((EmotionBubbleInfo)picked);
     }
 
-    public void specificBubbleGeneration(string bubbleName)
+    public Bubble specificBubbleGeneration(string bubbleName,Vector3 position)
     {
         if (actionBubbleInfoDict.ContainsKey(bubbleName))
         {
-            actionBubbleGeneration(actionBubbleInfoDict[bubbleName]);
-        }else if (ingredientBubbleInfoDict.ContainsKey(bubbleName))
+            return actionBubbleGeneration(actionBubbleInfoDict[bubbleName], position);
+        }else if (emotionBubbleInfoDict.ContainsKey(bubbleName))
         {
 
-            ingredientBubbleGeneration(ingredientBubbleInfoDict[bubbleName]);
+            return  ingredientBubbleGeneration(emotionBubbleInfoDict[bubbleName]);
         }
         else
         {
             Debug.LogError("wrong bubble name to generate " + bubbleName);
         }
+        return null;
     }
 
     public void bubbleGeneration()
     {
 
         rabbishGeneration();
-        var rand = Random.Range(0, actionBubbleInfoDict.Count+ ingredientBubbleInfoDict.Count*2);
+        var rand = Random.Range(0, actionBubbleInfoDict.Count+ emotionBubbleInfoDict.Count*2);
         if(rand< actionBubbleInfoDict.Count)
         {
             actionBubbleGeneration();
@@ -192,19 +177,19 @@ public class BubbleManager : Singleton<BubbleManager>
     // Start is called before the first frame update
     void Start()
     {
-        actionBubbleGeneration();
-        actionBubbleGeneration();
-        ingredientBubbleGeneration();
+        //actionBubbleGeneration();
+        //actionBubbleGeneration();
+        //ingredientBubbleGeneration();
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentGenerateTime += Time.deltaTime;
-        if (currentGenerateTime >= generateTime)
-        {
-            currentGenerateTime = 0;
-            bubbleGeneration();
-        }
+        //currentGenerateTime += Time.deltaTime;
+        //if (currentGenerateTime >= generateTime)
+        //{
+        //    currentGenerateTime = 0;
+        //    bubbleGeneration();
+        //}
     }
 }
