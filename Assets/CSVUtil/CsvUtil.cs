@@ -19,42 +19,39 @@ namespace Sinbad
         static string path = Application.dataPath + "/Resources/csv/";
         // Quote semicolons too since some apps e.g. Numbers don't like them
         static char[] quotedChars = new char[] { ',', ';' };
-        public static List<List<string>> LoadList(string filename,bool includeTitle)
+        public static List<List<string>> LoadList(string filename, bool includeTitle)
         {
             TextReader t;
             //var dbPath = "Assets/StreamingAssets/" + filename;
             var dbPath = path + filename;
-            using (var fs = new FileStream(dbPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            var text = Resources.Load<TextAsset>("csv/" + filename).text;
+            var splitFile = new string[] { "\r\n", "\r", "\n" };
+            var lines = text.Split(splitFile, StringSplitOptions.None);
+            int lineId = 0;
+            var ret = new List<List<string>>();
+            if (!includeTitle)
             {
-                using (var sr = new StreamReader(fs))
-                {
-                    var ret = new List<List<string>>();
-                    if (!includeTitle)
-                    {
 
-                        string header = sr.ReadLine();
-                    }
-                    //var fieldDefs = ParseHeader(header);
-                    // FieldInfo[] fi = typeof(T).GetFields();
-                    //bool isValueType = typeof(T).IsValueType;
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        var obj = new List<string>();
-                        // box manually to avoid issues with structs
-                        object boxed = obj;
-                        string[] values = EnumerateCsvLine(line).ToArray();
-                        foreach (var v in values)
-                        {
-                            obj.Add(v);
-                        }
-                        ret.Add(obj);
-                    }
-                    return ret;
-                }
-
+                string header = lines[lineId];
+                lineId++;
             }
+            while (lineId <lines.Length-1)
+            {
+                string line = lines[lineId];
+                lineId++;
+                var obj = new List<string>();
+                // box manually to avoid issues with structs
+                object boxed = obj;
+                string[] values = EnumerateCsvLine(line).ToArray();
+                foreach (var v in values)
+                {
+                    obj.Add(v);
+                }
+                ret.Add(obj);
+            }
+            return ret;
         }
+
 
         // Load a CSV into a list of struct/classes from a file where each line = 1 object
         // First line of the CSV must be a header containing property names
@@ -67,37 +64,82 @@ namespace Sinbad
         //   fields as per the header. If false, ignores and just fills what it can
         public static List<T> LoadObjects<T>(string filename, bool strict = true) where T : new()
         {
-//#if UNITY_EDITOR
-            var dbPath = path+ filename;
-//#else
-//            var filepath = string.Format("{0}/{1}", path, filename);
-//            if (!File.Exists(filepath))
-//        {
-//            Debug.Log("Database not in Persistent path");
-//#if UNITY_ANDROID
-//        var loadDb = new WWW("jar:file://" + Application.dataPath + "!/assets/" + filename);  // this is the path to your StreamingAssets in android
-//            while (!loadDb.isDone) { }  // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check
-//            // then save to Application.persistentDataPath
-//            File.WriteAllBytes(filepath, loadDb.bytes);
-//#else
-        
-//	var loadDb =  Application.streamingAssetsPath+"/"+ filename;  // this is the path to your StreamingAssets in iOS
-//	// then save to Application.persistentDataPath
-//	File.Copy(loadDb, filepath);
-//#endif
-//            Debug.Log("Database written");
-//        }
-//            var dbPath = filepath;
-//#endif
+            //#if UNITY_EDITOR
+            var dbPath = path + filename;
+            //#else
+            //            var filepath = string.Format("{0}/{1}", path, filename);
+            //            if (!File.Exists(filepath))
+            //        {
+            //            Debug.Log("Database not in Persistent path");
+            //#if UNITY_ANDROID
+            //        var loadDb = new WWW("jar:file://" + Application.dataPath + "!/assets/" + filename);  // this is the path to your StreamingAssets in android
+            //            while (!loadDb.isDone) { }  // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check
+            //            // then save to Application.persistentDataPath
+            //            File.WriteAllBytes(filepath, loadDb.bytes);
+            //#else
+
+            //	var loadDb =  Application.streamingAssetsPath+"/"+ filename;  // this is the path to your StreamingAssets in iOS
+            //	// then save to Application.persistentDataPath
+            //	File.Copy(loadDb, filepath);
+            //#endif
+            //            Debug.Log("Database written");
+            //        }
+            //            var dbPath = filepath;
+            //#endif
             //Debug.Log("Final PATH: " + dbPath);
-            using (var fs = new FileStream(dbPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+
+            var ret = new List<T>();
+            var text = Resources.Load<TextAsset>("csv/" + filename).text;
+            var splitFile = new string[] { "\r\n", "\r", "\n" };
+            var lines = text.Split(splitFile, StringSplitOptions.None);
+            int lineId = 0;
+            string header = lines[lineId];
+            lineId++;
+            var fieldDefs = ParseHeader(header);
+            FieldInfo[] fi = typeof(T).GetFields();
+            bool isValueType = typeof(T).IsValueType;
+            while (lineId < lines.Length-1)
             {
-                using (var sr = new StreamReader(fs))
+                string line = lines[lineId];
+                lineId++;
+                var obj = new T();
+                // box manually to avoid issues with structs
+                object boxed = obj;
+                if (ParseLineToObject(line, fieldDefs, fi, boxed, strict))
                 {
-                    return LoadObjects<T>(sr, strict);
+                    // unbox value types
+                    if (isValueType)
+                        obj = (T)boxed;
+                    ret.Add(obj);
                 }
             }
+            return ret;
         }
+
+        //public static List<T> LoadObjects<T>(string text, bool strict = true) where T : new()
+        //{
+        //    var ret = new List<T>();
+        //    string header = rdr.ReadLine();
+        //    var fieldDefs = ParseHeader(header);
+        //    FieldInfo[] fi = typeof(T).GetFields();
+        //    bool isValueType = typeof(T).IsValueType;
+        //    string line;
+        //    while ((line = rdr.ReadLine()) != null)
+        //    {
+        //        var obj = new T();
+        //        // box manually to avoid issues with structs
+        //        object boxed = obj;
+        //        if (ParseLineToObject(line, fieldDefs, fi, boxed, strict))
+        //        {
+        //            // unbox value types
+        //            if (isValueType)
+        //                obj = (T)boxed;
+        //            ret.Add(obj);
+        //        }
+        //    }
+        //    return ret;
+        //}
+
 
         // Load a CSV into a list of struct/classes from a stream where each line = 1 object
         // First line of the CSV must be a header containing property names
@@ -139,16 +181,16 @@ namespace Sinbad
         // then it will be ignored (as will any lines that start that way)
         // This method throws file exceptions if file is not found
         // Field names are matched case-insensitive for convenience
-        public static void LoadObject<T>(string filename, ref T destObject)
-        {
-            using (var stream = File.Open(filename, FileMode.Open))
-            {
-                using (var rdr = new StreamReader(stream, System.Text.Encoding.UTF8))
-                {
-                    LoadObject<T>(rdr, ref destObject);
-                }
-            }
-        }
+        //public static void LoadObject<T>(string filename, ref T destObject)
+        //{
+        //    using (var stream = File.Open(filename, FileMode.Open))
+        //    {
+        //        using (var rdr = new StreamReader(stream, System.Text.Encoding.UTF8))
+        //        {
+        //            LoadObject<T>(rdr, ref destObject);
+        //        }
+        //    }
+        //}
 
         // Load a CSV file containing fields for a single object from a stream
         // No header is required, but it can be present with '#' prefix
@@ -394,12 +436,12 @@ namespace Sinbad
                         Debug.LogError("key " + p[0] + " has been defined multiple times in string: " + strValue);
                     }
                     float floatValue;
-                    if(!float.TryParse(p[1], out floatValue))
+                    if (!float.TryParse(p[1], out floatValue))
                     {
 
                         Debug.LogError("value " + p[1] + " is not a float");
                     }
-                    res[p[0]] =  floatValue;
+                    res[p[0]] = floatValue;
                 }
                 return res;
             }

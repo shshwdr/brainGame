@@ -34,7 +34,7 @@ public class AttributeManager : Singleton<AttributeManager>
     // Start is called before the first frame update
     void Awake()
     {
-        var actionBubbles = CsvUtil.LoadObjects<AttributeInfo>("Attribute.csv");
+        var actionBubbles = CsvUtil.LoadObjects<AttributeInfo>("Attribute");
         foreach (var info in actionBubbles)
         {
             attributeDict[info.name] = info;

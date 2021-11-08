@@ -10,7 +10,7 @@ public class BubbleCalculator : Singleton<BubbleCalculator>
     // Start is called before the first frame update
     void Awake()
     {
-        var ideaEmtionMap = CsvUtil.LoadList("IdeaEmotionMap.csv",true);
+        var ideaEmtionMap = CsvUtil.LoadList("IdeaEmotionMap",true);
         for (int i = 1;i < ideaEmtionMap[0].Count;i++) {
 
             var emo = ideaEmtionMap[0][i];

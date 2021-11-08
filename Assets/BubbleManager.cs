@@ -44,13 +44,13 @@ public class BubbleManager : Singleton<BubbleManager>
 
     void Awake()
     {
-        var actionBubbles = CsvUtil.LoadObjects<ActionBubbleInfo>("Idea.csv");
+        var actionBubbles = CsvUtil.LoadObjects<ActionBubbleInfo>("Idea");
         foreach (var info in actionBubbles)
         {
             actionBubbleInfoDict[info.name] = info;
         }
 
-        var emotionBubbles = CsvUtil.LoadObjects<EmotionBubbleInfo>("Emotion.csv");
+        var emotionBubbles = CsvUtil.LoadObjects<EmotionBubbleInfo>("Emotion");
         foreach (var info in emotionBubbles)
         {
             emotionBubbleInfoDict[info.name] = info;

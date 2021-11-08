@@ -21,7 +21,7 @@ public class LogController : Singleton<LogController>
     private void Awake()
     {
 
-        var logs = CsvUtil.LoadObjects<ActionLog>("Log.csv");
+        var logs = CsvUtil.LoadObjects<ActionLog>("Log");
         foreach (var info in logs)
         {
             if (!actionBubbleInfoDict.ContainsKey(info.idea)){

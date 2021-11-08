@@ -11,7 +11,7 @@ public class DefaultDayManager : Singleton<DefaultDayManager>
     void Awake()
     {
 
-        dayInfoList = CsvUtil.LoadList("DayPlan.csv",true);
+        dayInfoList = CsvUtil.LoadList("DayPlan",true);
         dayTime = dayInfoList[0];
         dayInfoList.RemoveAt(0);
 

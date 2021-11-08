@@ -21,7 +21,7 @@ public class DevelopGameStageManager : Singleton<DevelopGameStageManager>
     void Awake()
     {
 
-        gameStageInfoList = CsvUtil.LoadObjects<GameStageInfo>("GameStage.csv");
+        gameStageInfoList = CsvUtil.LoadObjects<GameStageInfo>("GameStage");
         foreach (var info in gameStageInfoList)
         {
             gameStageInfo[info.name] = info;
