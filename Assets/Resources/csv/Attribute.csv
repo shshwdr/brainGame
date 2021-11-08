@@ -1,8 +1,8 @@
-﻿name,displayName
-财富,财富
-关系,关系
-体力,体力
-心情,心情
-玩法,玩法
-感官,感官
-程序,程序
+﻿name,displayName,isGame
+财富,财富,
+关系,关系,
+体力,体力,
+心情,心情,
+玩法,玩法,TRUE
+感官,感官,TRUE
+程序,程序,TRUE

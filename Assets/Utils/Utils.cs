@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Utils : MonoBehaviour
@@ -14,6 +15,28 @@ public class Utils : MonoBehaviour
     {
         return list[Random.Range(0, list.Count)];
     }
+
+    public static  T pickRandomWithProbability<T>(Dictionary<T, float> itemWithProbability)
+    {
+        List<float> probabilityList = new List<float>();
+        float maxProb = 0;
+        foreach (var value in itemWithProbability.Values)
+        {
+            maxProb += value;
+            probabilityList.Add(maxProb);
+        }
+        float rand = Random.Range(0f, maxProb);
+        for (int i = 0; i < itemWithProbability.Keys.Count; i++)
+        {
+            if (rand <= probabilityList[i])
+            {
+                return itemWithProbability.Keys.ToList()[i];
+            }
+        }
+        Debug.LogError("pickInfoWithProbability reached somewhere wrong " + rand + " " + maxProb);
+        return itemWithProbability.Keys.ToList()[0];
+    }
+
     T CopyComponent<T>(T original, GameObject destination) where T : Component
     {
         System.Type type = original.GetType();

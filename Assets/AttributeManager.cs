@@ -7,11 +7,29 @@ using UnityEngine;
 public class AttributeInfo : BaseInfo
 {
     public float value;
+    public bool isGame;
 }
+
 
 public class AttributeManager : Singleton<AttributeManager>
 {
     public Dictionary<string,AttributeInfo> attributeDict = new Dictionary<string, AttributeInfo>();
+
+    List<string> gameAttributes = new List<string>();
+
+    public float gameAttributesValue()
+    {
+        float res = 0;
+        foreach(var att in gameAttributes)
+        {
+            if (!attributeDict.ContainsKey(att))
+            {
+                Debug.Log("no game attribute " + att);
+            }
+            res += attributeDict[att].value;
+        }
+        return res;
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -20,6 +38,14 @@ public class AttributeManager : Singleton<AttributeManager>
         foreach (var info in actionBubbles)
         {
             attributeDict[info.name] = info;
+            if (info.isGame)
+            {
+                gameAttributes.Add(info.name);
+            }
+            else
+            {
+                info.value = 50;
+            }
         }
     }
 

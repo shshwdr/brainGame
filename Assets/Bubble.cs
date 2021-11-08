@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Bubble : MonoBehaviour
 {
-    SpriteRenderer rend;
+    public SpriteRenderer rend;
     Vector3 prevFingerPosition = Vector3.zero;
     CircleCollider2D collider;
     Rigidbody2D rb;

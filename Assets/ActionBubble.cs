@@ -7,7 +7,7 @@ public class ActionBubble : Bubble
     public ActionBubbleInfo info;
     float currentValue;
     
-    public void consumeIngredient(IngredientBubble ing, ActionSlot slot)
+    public void consumeIngredient(EmotionBubble ing, ActionSlot slot)
     {
         //currentValue += info.ingredientDict[ing.info.name].addValue;
         //if (currentValue >= 1)

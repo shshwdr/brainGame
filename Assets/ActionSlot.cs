@@ -12,21 +12,26 @@ public class ActionSlot : MonoBehaviour
     Coroutine coroutine;
     public TMP_Text timeLabel;
     float score = 0;
+    public float baseScore = 10;
+    bool isFinished = false;
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (transform.position.x < -7)
+        {
+
+            Destroy(gameObject, 30);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "actionBar")
+        if(collision.tag == "actionBar" && !isFinished)
         {
             doAction();
         }
@@ -34,6 +39,7 @@ public class ActionSlot : MonoBehaviour
 
     void doAction()
     {
+        isFinished = true;
 
         //Debug.Log("do action " + actionBubble.info.name);
         string logString = "在" + timeLabel.text + actionBubble.info.log[0];
@@ -47,13 +53,28 @@ public class ActionSlot : MonoBehaviour
         string finalLog = LogController.Instance.getActionLog(actionBubble.info.name, success);
         logString += finalLog;
 
-        
+
         LogController.Instance.addLog(logString, Color.white);
 
         //give reward
         var attribute = success == 1 ? actionBubble.info.successAttribute : actionBubble.info.failedAttribute;
 
         AttributeManager.Instance.addAttributes(attribute);
+
+
+        if (success == 1 && actionBubble.info.gameProcess > 0)
+        {
+            DevelopGameStageManager.Instance.addProcess(AttributeManager.Instance.gameAttributesValue());
+        }
+        if (success == 1)
+        {
+            actionBubble.rend.color = Color.green;
+        }
+        else
+        {
+
+            actionBubble.rend.color = Color.grey;
+        }
     }
     public void init(string idea,string time,Vector3 position)
     {
@@ -63,54 +84,63 @@ public class ActionSlot : MonoBehaviour
         attachAction((ActionBubble)bubble);
     }
 
-    public void removeAction()
+    //public void removeAction()
+    //{
+    //    actionBubble = null;
+    //    overlayImage.gameObject.SetActive(false);
+    //    DOTween.Kill(overlayImage.fillAmount);
+    //    StopCoroutine(coroutine);
+    //}
+
+    void updateOverlay()
     {
-        actionBubble = null;
-        overlayImage.gameObject.SetActive(false);
-        DOTween.Kill(overlayImage.fillAmount);
-        StopCoroutine(coroutine);
+        overlayImage.fillAmount = score/100f;
     }
 
     public void attachAction(ActionBubble bubble)
     {
+        if (actionBubble)
+        {
+            Destroy(actionBubble.gameObject);
+
+        }
         actionBubble = bubble;
         //LogController.Instance.addLog(bubble.info.logs[Random.Range(0, bubble.info.logs.Length)], Color.yellow);
-        overlayImage.gameObject.SetActive(true);
-        overlayImage.fillAmount = 0;
+        // overlayImage.gameObject.SetActive(true);
 
+        bubble.transform.position = transform.position;
+        bubble.transform.rotation = Quaternion.identity;
         bubble.attachToSlot(this);
-       // StartCoroutine(delayAttach(bubble));
+        updateOverlay();
         //Debug.Log("attach action " + actionBubble.info.name + " " + actionBubble.info.duration);
         //DOTween.To(() => overlayImage.fillAmount, x => overlayImage.fillAmount = x, 1, actionBubble.info.duration);
 
         //coroutine = StartCoroutine(finishAction(actionBubble.info.duration));
     }
 
-    IEnumerator delayAttach(ActionBubble bubble)
+
+    //public IEnumerator finishAction(float duration)
+    //{
+    //    yield return new WaitForSeconds(duration);
+    //    if (actionBubble)
+    //    {
+    //        actionBubble.failed();
+    //        removeAction();
+    //    }
+    //}
+
+    void consumeEmotion(EmotionBubble bubble)
     {
-        yield return new WaitForSeconds(0.1f);
 
-        bubble.attachToSlot(this);
-    }
+        var value = BubbleCalculator.Instance.calculateAddScore(actionBubble.info.name, bubble.info.name);
+        score += value*baseScore;
+        Destroy(bubble.gameObject);
 
-
-    public IEnumerator finishAction(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        if (actionBubble)
-        {
-            actionBubble.failed();
-            removeAction();
-        }
-    }
-
-    void consumeIngredient(IngredientBubble bubble)
-    {
-        //Destroy(bubble.gameObject);
-        //var actionBubbleLogs = actionBubble.info.ingredientDict[bubble.info.name].logs;
+        updateOverlay();
+        //var actionBubbleLogs = actionBubble.info.emotionDict[bubble.info.name].logs;
         //var addValue = actionBubble.info.ingredientDict[bubble.info.name].addValue;
-        //LogController.Instance.addLog(actionBubbleLogs[Random.Range(0, actionBubbleLogs.Length)], addValue>0 ?Color.white:Color.grey);
-        //actionBubble.consumeIngredient(bubble,this);
+        //LogController.Instance.addLog(actionBubbleLogs[Random.Range(0, actionBubbleLogs.Length)], addValue > 0 ? Color.white : Color.grey);
+        //actionBubble.consumeIngredient(bubble, this);
     }
 
     public void takeBubble(Bubble bubble)
@@ -121,19 +151,29 @@ public class ActionSlot : MonoBehaviour
         }
         else
         {
-            consumeIngredient((IngredientBubble)bubble);
+            consumeEmotion((EmotionBubble)bubble);
         }
     }
 
     public bool canTakeBubble(Bubble bubble)
     {
-        if(bubble.isActionBubble && actionBubble == null)
-        {
-            return true;
-        }
-        if (!bubble.isActionBubble && actionBubble != null) {
-            return true;
-        }
-        return false;
+        return !isFinished;
+        //if(bubble.isActionBubble && actionBubble == null)
+        //{
+        //    return true;
+        //}
+        //if (!bubble.isActionBubble && actionBubble != null) {
+        //    return true;
+        //}
+        //return false;
+    }
+
+    void OnBecameInvisible()
+    {
+        //Destroy(gameObject);
+    }
+    private void OnDestroy()
+    {
+        Destroy(actionBubble.gameObject);
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IngredientBubble : Bubble
+public class EmotionBubble : Bubble
 {
     public EmotionBubbleInfo info;
     public override void init(BubbleInfo inf)

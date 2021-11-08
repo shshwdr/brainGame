@@ -17,20 +17,23 @@ public class DefaultDayIdeaGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        moveSpeed = (float)GameManager.Instance.data["bubbleMoveSpeed"];
+        slotInterval = (float)GameManager.Instance.data["bubbleSlotInterval"];
         generateADay();
     }
 
     void generateSlot(string idea,string time)
     {
         GameObject slotPrefab = Resources.Load<GameObject>("prefab/ideaSlot");
-        var slot= Instantiate(slotPrefab, startPosition,Quaternion.identity, dayContent);
+        var slot= Instantiate(slotPrefab, startPosition + dayContent.transform.position,Quaternion.identity, dayContent);
         slot.GetComponent<ActionSlot>().init(idea, time, startPosition);
         startPosition += Vector3.right * slotInterval;
+        //Debug.Log("generate position " + startPosition);
     }
 
     void generateADay()
     {
-        var aday = DefaultDayManager.Instance.dayInfoList[0];
+        var aday = Utils.randomFromList(DefaultDayManager.Instance.dayInfoList);
         for(int i = 0;i<aday.Count;i++)
         {
             generateSlot(aday[i], DefaultDayManager.Instance.dayTime[i]);
@@ -41,5 +44,9 @@ public class DefaultDayIdeaGenerator : MonoBehaviour
     void Update()
     {
         dayContent.Translate(Vector3.left * moveSpeed * Time.deltaTime);
+        if (dayContent.position.x + startPosition.x < 3)
+        {
+            generateADay();
+        }
     }
 }
