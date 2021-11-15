@@ -1,7 +1,5 @@
-﻿name,displayName
-高兴,高兴
-悲伤,悲伤
-愤怒,愤怒
-恐惧,恐惧
-激动,激动
-平静,平静
+﻿name,displayName,colorString
+高兴,高兴,yellow
+悲伤,悲伤,blue
+愤怒,愤怒,red
+恐惧,恐惧,black

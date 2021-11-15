@@ -66,7 +66,18 @@ public class AttributeManager : Singleton<AttributeManager>
         addOneAttribute(n, v);
         EventPool.Trigger("attributeUpdate");
     }
+    public void reduceAllAttributes(int amount)
+    {
+        foreach(var pair in attributeDict.Keys)
+        {
+            if (!attributeDict[pair].isGame)
+            {
+                attributeDict[pair].value -= amount;
 
+            }
+        }
+        EventPool.Trigger("attributeUpdate");
+    }
     public void addAttributes(Dictionary<string,float> dict)
     {
         foreach(var pair in dict)

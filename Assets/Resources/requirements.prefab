@@ -115,6 +115,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: requirement
       objectReference: {fileID: 0}
+    - target: {fileID: 4171477248611594142, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
+      propertyPath: m_fontSize
+      value: 29.85
+      objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -145,11 +149,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 40.94
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -217,6 +221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: requirement (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4171477248611594142, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
+      propertyPath: m_fontSize
+      value: 29.85
+      objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -247,11 +255,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 40.94
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9053669627255489946, guid: 2ea21676016d21c4ca7f2f860397336e, type: 3}
       propertyPath: m_LocalPosition.x

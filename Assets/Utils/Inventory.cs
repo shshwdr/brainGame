@@ -4,39 +4,15 @@ using Pool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class InfoBase
-{
-    public string name;
-    public string displayName;
-    public string description;
-}
-public class ItemInfo: InfoBase
-{
-    public int amount;
-    public int startValue;
-}
-public class AllItemInfo
-{
-    public List<ItemInfo> resources;
-    public List<ItemInfo> tool; 
-}
 public class Inventory : Singleton<Inventory>
 {
-    public Dictionary<string, ItemInfo> itemDict = new Dictionary<string, ItemInfo>();
-
-    public int inventoryUnlockedCellCount = 2;
-    public string selectedItemName;
-
-    public void addInventoryUnlockedCell()
+    //public Dictionary<string, ItemInfo> itemDict = new Dictionary<string, ItemInfo>();
+    public List<string> itemList = new List<string>();
+    public int maxCount = 7;
+    public bool canAddItem(string itemName)
     {
-        inventoryUnlockedCellCount++;
 
-        EventPool.Trigger("inventoryChanged");
-    }
-    public bool canAddItem(string itemName, int value = 1)
-    {
-        return true;
+        return !(itemList.Count>=maxCount);
         //if (itemValueDict.ContainsKey(itemName))
         //{
         //    return true;
@@ -49,75 +25,99 @@ public class Inventory : Singleton<Inventory>
     }
 
 
-    public void updateSelectedItem(string name)
-    {
-        selectedItemName = name;
+    //public void updateSelectedItem(string name)
+    //{
+    //    selectedItemName = name;
 
-        DialogueLua.SetVariable("holdingItem", name);
-    }
+    //    DialogueLua.SetVariable("holdingItem", name);
+    //}
 
-    public void sendGift()
-    {
-        if (selectedItemName == "")
-        {
-            Debug.LogError("you send what a you send");
-            return;
-        }
-        //sometimes should not be able to send
-        consumeItem(selectedItemName, 1);
+    //public void sendGift()
+    //{
+    //    if (selectedItemName == "")
+    //    {
+    //        Debug.LogError("you send what a you send");
+    //        return;
+    //    }
+    //    //sometimes should not be able to send
+    //    consumeItem(selectedItemName, 1);
 
-        selectedItemName = "";
+    //    selectedItemName = "";
 
-        EventPool.Trigger("inventoryChanged");
-    }
+    //    EventPool.Trigger("inventoryChanged");
+    //}
 
-    public void select(string name)
-    {
-        if(selectedItemName == name)
-        {
-            updateSelectedItem("");
-        }
-        else
-        {
+    //public void select(int index)
+    //{
+    //    selectedItemIndex = index;
+    //    EventPool.Trigger("inventoryChanged");
+    //}
 
-            updateSelectedItem(name);
-        }
-        EventPool.Trigger("inventoryChanged");
-    }
-
+    //public void addItem(string itemName)
+    //{
+    //    addItem(itemName, 1);
+    //}
     public void addItem(string itemName)
     {
-        addItem(itemName, 1);
-    }
-    public void addItem(string itemName, int value)
-    {
-        if (!canAddItem(itemName, value))
+        if (!canAddItem(itemName))
         {
-            Debug.LogError("can't add item " + itemName);
+            Debug.LogError("Your bag is full");
+            //DialogueManager.ShowAlert("Your bag is full");
+            return;
         }
-        if (itemDict.ContainsKey(itemName))
-        {
-            itemDict[itemName].amount += value;
-        }
-        //else if (itemDict.Count < inventoryUnlockedCellCount)
-        //{
-        //    itemDict[itemName] = value;
-        //}
+        itemList.Add(itemName);
+
         EventPool.Trigger("inventoryChanged");
     }
 
-    public void consumeItem(string itemName, int value = 1)
+    public bool canConsumeItems(Dictionary<string, int> items)
     {
-        if(!itemDict.ContainsKey(itemName) || itemDict[itemName].amount < value)
+        foreach(var item in itemList)
         {
-            if (CheatManager.Instance.hasUnlimitResource)
+            if (items.ContainsKey(item))
             {
-                return;
+                items[item] -= 1;
             }
-            Debug.LogError("not enough item to consume");
-            return;
         }
-        itemDict[itemName].amount -= value;
+        foreach(var pair in items)
+        {
+            if (pair.Value > 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void consumeItem(int index)
+    {
+        itemList.RemoveAt(index);
+        EventPool.Trigger("inventoryChanged");
+    }
+
+    public void consumeItems(Dictionary<string,int> items)
+    {
+
+        foreach(var pair in items)
+        {
+            for(int i = 0; i < pair.Value; i++)
+            {
+
+                itemList.Remove(pair.Key);
+            }
+        }
+
+
+        //if(!itemDict.ContainsKey(itemName) || itemDict[itemName].amount < value)
+        //{
+        //    if (CheatManager.Instance.hasUnlimitResource)
+        //    {
+        //        return;
+        //    }
+        //    Debug.LogError("not enough item to consume");
+        //    return;
+        //}
+        //itemDict[itemName].amount -= value;
 
         //if (itemValueDict[itemName] <= 0)
         //{
@@ -127,46 +127,48 @@ public class Inventory : Singleton<Inventory>
     }
 
 
-    public int itemAmount(string itemName)
-    {
-        return itemDict.ContainsKey(itemName) ? itemDict[itemName].amount : 0;
-    }
-    public bool hasItemAmount(string itemName,int amount)
-    {
-        if (CheatManager.Instance.hasUnlimitResource)
-        {
-            return true;
-        }
-        return itemDict.ContainsKey(itemName) && itemDict[itemName].amount >= amount;
-    }
-    public bool hasItem(string itemName)
-    {
-        return hasItemAmount(itemName, 1);
-    }
+    //public int itemAmount(string itemName)
+    //{
+    //    return itemDict.ContainsKey(itemName) ? itemDict[itemName].amount : 0;
+    //}
+    //public bool hasItemAmount(string itemName,int amount)
+    //{
+    //    if (CheatManager.Instance.hasUnlimitResource)
+    //    {
+    //        return true;
+    //    }
+    //    return itemDict.ContainsKey(itemName) && itemDict[itemName].amount >= amount;
+    //}
+    //public bool hasItem(string itemName)
+    //{
+    //    return hasItemAmount(itemName, 1);
+    //}
     // Start is called before the first frame update
-    void Awake()
-    {
-        string text = Resources.Load<TextAsset>("json/Inventory").text;
-        var allNPCs = JsonMapper.ToObject<AllItemInfo>(text);
-        foreach (ItemInfo info in allNPCs.resources)
-        {
-            itemDict[info.name] = info;
-            info.amount = info.startValue;
-        }
-    }
+
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            foreach(var key in itemDict.Keys)
-            {
-                //if (!itemDict[key].noItemCollected)
-                {
-                    itemDict[key].amount += 1;
-                }
-            }
-        }
+        //if (startInventory)
+        //{
+
+        //    for (int i = 1; i <= 7; i++)
+        //    {
+        //        if (Input.GetKeyDown(KeyCode.Alpha0 + i))
+        //        {
+        //            consumeItem(i - 1);
+        //        }
+        //    }
+        //}
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    foreach(var key in itemDict.Keys)
+        //    {
+        //        //if (!itemDict[key].noItemCollected)
+        //        {
+        //            itemDict[key].amount += 1;
+        //        }
+        //    }
+        //}
     }
 }

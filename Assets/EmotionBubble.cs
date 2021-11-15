@@ -11,12 +11,14 @@ public class EmotionBubble : Bubble
     public override void init(BubbleInfo inf)
     {
         base.init(inf);
-        symbol = Utils.randomFromList(new List<char> { '+', '-' });
-        value = Random.Range(1, 5);
-        nameLable .text= symbol+value.ToString();
-        emotionType = inf.name == "高兴" ? 0 : 1;
-        rend.color = BubbleManager.Instance.emotionIdToColor[emotionType];
+        //info = inf;
+        //symbol = Utils.randomFromList(new List<char> { '+', '-' });
+        //value = Random.Range(1, 5);
+        nameLable .text= inf.displayName;
+        //emotionType = inf.name == "高兴" ? 0 : 1;
+        //rend.color = BubbleManager.Instance.emotionIdToColor[emotionType];
         info = (EmotionBubbleInfo)inf;
+        rend.color = info.color;
        // GetComponent<SpriteRenderer>().color = Color.blue;
     }
     // Start is called before the first frame update
@@ -24,7 +26,20 @@ public class EmotionBubble : Bubble
     {
         
     }
+    void OnMouseDown()
+    {
+        //Debug.Log("on mouse down");
+        if (Inventory.Instance.canAddItem(info.name))
+        {
 
+            Inventory.Instance.addItem(info.name);
+            Destroy(gameObject);
+        }
+        else
+        {
+
+        }
+    }
     // Update is called once per frame
     void Update()
     {

@@ -16,7 +16,16 @@ public class Utils : MonoBehaviour
         return list[Random.Range(0, list.Count)];
     }
 
-    public static  T pickRandomWithProbability<T>(Dictionary<T, float> itemWithProbability, float maxValue) 
+    public static Color ToColor(string color)
+    {
+        return (Color)typeof(Color).GetProperty(color.ToLowerInvariant()).GetValue(null, null);
+    }
+    public static T randomFromArray<T>(T[] list)
+    {
+        return list[Random.Range(0, list.Length)];
+    }
+
+    public static  T pickRandomWithProbability<T>(Dictionary<T, float> itemWithProbability, float maxValue = -1) 
     {
         List<float> probabilityList = new List<float>();
         float maxProb = 0;

@@ -1,8 +1,9 @@
 {
-  "emotionBubbleGenerationTime":2,
-  "ideaBubbleGenerationTime":5,
-  "bubbleMoveSpeed":1,
-  "bubbleSlotInterval":2
+  "emotionBubbleGenerationTime":1.5,
+  "ideaBubbleGenerationTime":11,
+  "dayIdeaBubbleGenerationTime":8,
+  "attributeReduceADay":5,
+  "dayIntervalTime":15
 
     
   }

@@ -27,6 +27,8 @@ public class ActionBubbleInfo:BubbleInfo
 
 public class EmotionBubbleInfo: BubbleInfo
 {
+    public string colorString;
+    public Color color { get { return Utils.ToColor(colorString); } }
 }
 
 
@@ -34,16 +36,20 @@ public class BubbleManager : Singleton<BubbleManager>
 {
     public List<Color> emotionIdToColor = new List<Color> {Color.red,Color.blue };
     public Transform generateTransform;
+    Transform[] generateTransforms;
     public Dictionary<string, ActionBubbleInfo> actionBubbleInfoDict = new Dictionary<string, ActionBubbleInfo>();
     public Dictionary<string, EmotionBubbleInfo> emotionBubbleInfoDict = new Dictionary<string, EmotionBubbleInfo>();
 
     public float emotionGenerateTime = 1;
-    public float ideaGenerateTime = 2;
+    public float ideaGenerateTime = 2; 
+    public float dayIdeaGenerateTime = 2;
     float currentEmotionGenerateTime = 0;
     float currentIdeaGenerateTime = 0;
 
     void Awake()
     {
+        generateTransforms = generateTransform.GetComponentsInChildren<Transform>();
+
         var actionBubbles = CsvUtil.LoadObjects<ActionBubbleInfo>("Idea");
         foreach (var info in actionBubbles)
         {
@@ -59,7 +65,9 @@ public class BubbleManager : Singleton<BubbleManager>
 
     Vector3 getPosition()
     {
-        return Utils.randomVector3_2d(generateTransform.position, 0.1f);
+        Transform selectTransform =  Utils.randomFromArray(generateTransforms);
+
+        return Utils.randomVector3_2d(selectTransform.position, 0.1f);
     }
 
     void rabbishGeneration()
@@ -140,18 +148,17 @@ public class BubbleManager : Singleton<BubbleManager>
     {
         emotionGenerateTime = (float)GameManager.Instance.data["emotionBubbleGenerationTime"];
         ideaGenerateTime = (float)GameManager.Instance.data["ideaBubbleGenerationTime"];
+        dayIdeaGenerateTime = (float)GameManager.Instance.data["dayIdeaBubbleGenerationTime"];
 
-        emotionBubbleGeneration();
-        emotionBubbleGeneration();
-        emotionBubbleGeneration();
-        emotionBubbleGeneration();
-        emotionBubbleGeneration();
-        emotionBubbleGeneration();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (DefaultDayManager.Instance.isResting())
+        {
+            return;
+        }
         currentEmotionGenerateTime += Time.deltaTime;
         if (currentEmotionGenerateTime >= emotionGenerateTime)
         {
