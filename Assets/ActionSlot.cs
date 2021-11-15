@@ -31,13 +31,13 @@ public class ActionSlot : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.tag == "actionBar" && !isFinished)
+        if(collision.GetComponent<PlayerBubble>() && !isFinished)
         {
-            doAction();
+            doAction(collision.GetComponent<PlayerBubble>());
         }
     }
 
-    void doAction()
+    void doAction(PlayerBubble playerBubble)
     {
         isFinished = true;
 
@@ -47,8 +47,10 @@ public class ActionSlot : MonoBehaviour
 
 
         //detect if success or not
-        int rand = Random.Range(0, 100);
-        int success = rand > score ? 0 : 1;
+        //int rand = Random.Range(0, 100);
+        //int success = rand > score ? 0 : 1;
+
+        int success = playerBubble.isSuccess(actionBubble);
 
         string finalLog = LogController.Instance.getActionLog(actionBubble.info.name, success);
         logString += finalLog;
@@ -94,7 +96,7 @@ public class ActionSlot : MonoBehaviour
 
     void updateOverlay()
     {
-        overlayImage.fillAmount = score/100f;
+        //overlayImage.fillAmount = score/100f;
     }
 
     public void attachAction(ActionBubble bubble)
@@ -129,18 +131,18 @@ public class ActionSlot : MonoBehaviour
     //    }
     //}
 
-    void consumeEmotion(EmotionBubble bubble)
+    public virtual void consumeEmotion(EmotionBubble bubble)
     {
 
-        var value = BubbleCalculator.Instance.calculateAddScore(actionBubble.info.name, bubble.info.name);
-        score += value*baseScore;
+       // var value = BubbleCalculator.Instance.calculateAddScore(actionBubble.info.name, bubble.info.name);
+        //score += value*baseScore;
         Destroy(bubble.gameObject);
 
         updateOverlay();
         //var actionBubbleLogs = actionBubble.info.emotionDict[bubble.info.name].logs;
         //var addValue = actionBubble.info.ingredientDict[bubble.info.name].addValue;
         //LogController.Instance.addLog(actionBubbleLogs[Random.Range(0, actionBubbleLogs.Length)], addValue > 0 ? Color.white : Color.grey);
-        //actionBubble.consumeIngredient(bubble, this);
+        actionBubble.consumeIngredient(bubble, this);
     }
 
     public void takeBubble(Bubble bubble)
@@ -155,7 +157,7 @@ public class ActionSlot : MonoBehaviour
         }
     }
 
-    public bool canTakeBubble(Bubble bubble)
+    public virtual bool canTakeBubble(Bubble bubble)
     {
         return !isFinished;
         //if(bubble.isActionBubble && actionBubble == null)

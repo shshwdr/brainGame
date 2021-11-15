@@ -16,14 +16,22 @@ public class Utils : MonoBehaviour
         return list[Random.Range(0, list.Count)];
     }
 
-    public static  T pickRandomWithProbability<T>(Dictionary<T, float> itemWithProbability)
+    public static  T pickRandomWithProbability<T>(Dictionary<T, float> itemWithProbability, float maxValue) 
     {
         List<float> probabilityList = new List<float>();
         float maxProb = 0;
-        foreach (var value in itemWithProbability.Values)
+        
         {
-            maxProb += value;
-            probabilityList.Add(maxProb);
+            foreach (var value in itemWithProbability.Values)
+            {
+                maxProb += value;
+                probabilityList.Add(maxProb);
+            }
+
+        }
+        if (maxValue > 0)
+        {
+            maxProb = maxValue;
         }
         float rand = Random.Range(0f, maxProb);
         for (int i = 0; i < itemWithProbability.Keys.Count; i++)
@@ -33,8 +41,8 @@ public class Utils : MonoBehaviour
                 return itemWithProbability.Keys.ToList()[i];
             }
         }
-        Debug.LogError("pickInfoWithProbability reached somewhere wrong " + rand + " " + maxProb);
-        return itemWithProbability.Keys.ToList()[0];
+        //Debug.LogError("pickInfoWithProbability reached somewhere wrong " + rand + " " + maxProb);
+        return default(T);
     }
 
     T CopyComponent<T>(T original, GameObject destination) where T : Component

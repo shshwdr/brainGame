@@ -6,22 +6,35 @@ public class ActionBubble : Bubble
 {
     public ActionBubbleInfo info;
     float currentValue;
-    
+
+
+    public EmotionRequirementCell[] emotionRequirementCells;
+
+
     public void consumeIngredient(EmotionBubble ing, ActionSlot slot)
     {
-        //currentValue += info.ingredientDict[ing.info.name].addValue;
+        emotionRequirementCells[ing.emotionType].updateEmotion(ing);
         //if (currentValue >= 1)
         //{
         //    succeed();
         //    slot.removeAction();
         //}
     }
-    
+
     public override void init(BubbleInfo inf)
     {
         base.init(inf);
+        emotionRequirementCells = GetComponentsInChildren<EmotionRequirementCell>();
         info = (ActionBubbleInfo)inf;
         isActionBubble = true;
+        int i = 0;
+        var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[inf.name];
+        foreach(var emotionRequirementCell in emotionRequirementCells)
+        {
+            emotionRequirementCell.init(expressionRanges[i],i);
+            i++;
+        }
+
     }
     public void getReward(List<string> rewards)
     {

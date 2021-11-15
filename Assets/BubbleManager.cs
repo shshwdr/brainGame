@@ -32,7 +32,7 @@ public class EmotionBubbleInfo: BubbleInfo
 
 public class BubbleManager : Singleton<BubbleManager>
 {
-
+    public List<Color> emotionIdToColor = new List<Color> {Color.red,Color.blue };
     public Transform generateTransform;
     public Dictionary<string, ActionBubbleInfo> actionBubbleInfoDict = new Dictionary<string, ActionBubbleInfo>();
     public Dictionary<string, EmotionBubbleInfo> emotionBubbleInfoDict = new Dictionary<string, EmotionBubbleInfo>();
@@ -90,9 +90,13 @@ public class BubbleManager : Singleton<BubbleManager>
     }
     public void ideaBubbleGeneration()
     {
-        var picked = Utils.pickRandomWithProbability(DevelopGameStageManager.Instance.currentStageInfo().ideas);
+        var picked = Utils.pickRandomWithProbability(DevelopGameStageManager.Instance.currentStageInfo().ideas,10);
+        if (picked!=default(string))
+        {
+            actionBubbleGeneration(actionBubbleInfoDict[picked]);
 
-        actionBubbleGeneration(actionBubbleInfoDict[picked]);
+        }
+
     }
 
 
@@ -136,6 +140,13 @@ public class BubbleManager : Singleton<BubbleManager>
     {
         emotionGenerateTime = (float)GameManager.Instance.data["emotionBubbleGenerationTime"];
         ideaGenerateTime = (float)GameManager.Instance.data["ideaBubbleGenerationTime"];
+
+        emotionBubbleGeneration();
+        emotionBubbleGeneration();
+        emotionBubbleGeneration();
+        emotionBubbleGeneration();
+        emotionBubbleGeneration();
+        emotionBubbleGeneration();
     }
 
     // Update is called once per frame
