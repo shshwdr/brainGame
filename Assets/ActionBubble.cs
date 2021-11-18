@@ -1,4 +1,4 @@
-using Pool;
+﻿using Pool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +17,42 @@ public class ActionBubble : Bubble
         {
             consume();
             succeed();
+            unlockOthers();
+        }
+    }
+
+    void unlockOthers()
+    {
+        info.finishedTime++;
+        var bubbleInfoDict = BubbleManager.Instance.actionBubbleInfoDict;
+        foreach (var value in bubbleInfoDict.Values)
+        {
+            if (!value.isUnlocked)
+            {
+                bool canUnlock = true;
+                foreach (var pair in value.isLockedBy)
+                {
+                    if (bubbleInfoDict[pair.Key].finishedTime < pair.Value)
+                    {
+                        canUnlock = false;
+                        break;
+                    }
+                }
+                if (canUnlock)
+                {
+                    value.isUnlocked = true;
+                    LogController.Instance.addLog("新想法解锁：" + value.displayName);
+                    if (!BubbleManager.Instance.categoryToIds.ContainsKey(value.category))
+                    {
+                        BubbleManager.Instance.categoryToIds[value.category] = new List<string>();
+                    }
+                    BubbleManager.Instance.categoryToIds[value.category].Add(value.name);
+                    if (info.gameProcess == 1)
+                    {
+                        BubbleManager.Instance.gameIdeas.Add(info.name);
+                    }
+                }
+            }
         }
     }
 
@@ -33,16 +69,16 @@ public class ActionBubble : Bubble
     }
     bool canFinish()
     {
-        var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[info.name];
-        Dictionary<string, int> res = new Dictionary<string, int>();
-        for (int i = 0; i < expressionRanges.Count; i++)
-        {
-            if (expressionRanges[i] > 0)
-            {
-                res[BubbleCalculator.Instance.IdToEmotion[i]] = (int)expressionRanges[i];
-            }
-        }
-        if (Inventory.Instance.canConsumeItems(res))
+        //var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[info.name];
+        //Dictionary<string, int> res = new Dictionary<string, int>();
+        //for (int i = 0; i < expressionRanges.Count; i++)
+        //{
+        //    if (expressionRanges[i] > 0)
+        //    {
+        //        res[BubbleCalculator.Instance.IdToEmotion[i]] = (int)expressionRanges[i];
+        //    }
+        //}
+        if (Inventory.Instance.canConsumeItems(info))
         {
             return true;
         }
@@ -54,16 +90,16 @@ public class ActionBubble : Bubble
 
     void consume()
     {
-        var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[info.name];
-        Dictionary<string, int> res = new Dictionary<string, int>();
-        for (int i = 0; i < expressionRanges.Count; i++)
-        {
-            if (expressionRanges[i] > 0)
-            {
-                res[BubbleCalculator.Instance.IdToEmotion[i]] = (int)expressionRanges[i];
-            }
-        }
-        Inventory.Instance.consumeItems(res);
+        //var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[info.name];
+        //Dictionary<string, int> res = new Dictionary<string, int>();
+        //for (int i = 0; i < expressionRanges.Count; i++)
+        //{
+        //    if (expressionRanges[i] > 0)
+        //    {
+        //        res[BubbleCalculator.Instance.IdToEmotion[i]] = (int)expressionRanges[i];
+        //    }
+        //}
+        Inventory.Instance.consumeItems(info);
     }
 
     //public void consumeIngredient(EmotionBubble ing, ActionSlot slot)
@@ -83,15 +119,21 @@ public class ActionBubble : Bubble
         info = (ActionBubbleInfo)inf;
         isActionBubble = true;
         int i = 0;
-        var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[inf.name];
+        //var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[inf.name];
 
-        foreach(var pair in BubbleCalculator.Instance.emotionToId)
+        foreach(var key in BubbleManager.Instance.emotionBubbleInfoDict.Keys)
         {
-            if (expressionRanges[pair.Value] > 0)
+            if (info.getEmotionRequirement(key) > 0)
             {
-                emotionRequirementCells[i].init(pair.Key, (int)expressionRanges[pair.Value]);
+
+                emotionRequirementCells[i].gameObject.SetActive(true);
+                emotionRequirementCells[i].init(key, info.getEmotionRequirement(key));
                 i++;
             }
+        }
+        for (; i < emotionRequirementCells.Length; i++)
+        {
+            emotionRequirementCells[i].gameObject.SetActive(false);
         }
 
         //foreach(var emotionRequirementCell in emotionRequirementCells)
@@ -117,7 +159,7 @@ public class ActionBubble : Bubble
         LogController.Instance.addLog(finalLog, Color.green);
         if (info.gameProcess > 0)
         {
-            DevelopGameStageManager.Instance.addProcess(3);
+            // DevelopGameStageManager.Instance.addProcess(3);
         }
         //getReward(pickedResult.rewards);
         Destroy(gameObject);

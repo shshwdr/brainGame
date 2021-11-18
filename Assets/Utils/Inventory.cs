@@ -70,6 +70,24 @@ public class Inventory : Singleton<Inventory>
         EventPool.Trigger("inventoryChanged");
     }
 
+    public bool canConsumeItems(ActionBubbleInfo actionInfo)
+    {
+        Dictionary<string, int> requiredItems = new Dictionary<string, int>();
+        foreach(var str in BubbleManager.Instance.emotionBubbleInfoDict.Keys)
+        {
+            requiredItems[str] = actionInfo.getEmotionRequirement(str);
+        }
+        return canConsumeItems(requiredItems);
+    }
+    public void consumeItems(ActionBubbleInfo actionInfo)
+    {
+        Dictionary<string, int> requiredItems = new Dictionary<string, int>();
+        foreach (var str in BubbleManager.Instance.emotionBubbleInfoDict.Keys)
+        {
+            requiredItems[str] = actionInfo.getEmotionRequirement(str);
+        }
+        consumeItems(requiredItems);
+    }
     public bool canConsumeItems(Dictionary<string, int> items)
     {
         foreach(var item in itemList)

@@ -423,26 +423,30 @@ namespace Sinbad
             {
                 Dictionary<string, float> res = new Dictionary<string, float>();
                 string[] pairs = strValue.Split('|');
-                foreach (string pair in pairs)
+                if (strValue.Length>0)
                 {
-                    string[] p = pair.Split(':');
-                    if (p.Length != 2)
+                    foreach (string pair in pairs)
                     {
-                        Debug.LogError("error when parse pair" + pair + " in string: " + strValue);
-                        return res;
-                    }
-                    if (res.ContainsKey(p[0]))
-                    {
-                        Debug.LogError("key " + p[0] + " has been defined multiple times in string: " + strValue);
-                    }
-                    float floatValue;
-                    if (!float.TryParse(p[1], out floatValue))
-                    {
+                        string[] p = pair.Split(':');
+                        if (p.Length != 2)
+                        {
+                            Debug.LogError("error when parse pair" + pair + " in string: " + strValue);
+                            return res;
+                        }
+                        if (res.ContainsKey(p[0]))
+                        {
+                            Debug.LogError("key " + p[0] + " has been defined multiple times in string: " + strValue);
+                        }
+                        float floatValue;
+                        if (!float.TryParse(p[1], out floatValue))
+                        {
 
-                        Debug.LogError("value " + p[1] + " is not a float");
+                            Debug.LogError("value " + p[1] + " is not a float");
+                        }
+                        res[p[0]] = floatValue;
                     }
-                    res[p[0]] = floatValue;
                 }
+                
                 return res;
             }
             else if (t == typeof(List<string>))
@@ -455,8 +459,12 @@ namespace Sinbad
                 }
                 return res;
             }
-
+            if(strValue == "")
+            {
+                strValue = "0";
+            }
             var cv = TypeDescriptor.GetConverter(t);
+            
             return cv.ConvertFromInvariantString(strValue);
         }
 

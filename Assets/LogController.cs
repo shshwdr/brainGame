@@ -56,6 +56,11 @@ public class LogController : Singleton<LogController>
     {
         scrollRect.normalizedPosition = new Vector2(0, 0);
     }
+
+    public void addLog(string str)
+    {
+        addLog(str, Color.white);
+    }
     public void addLog(string str,Color color)
     {
         var logPrefab = Resources.Load<GameObject>("log");

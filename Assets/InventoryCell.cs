@@ -26,8 +26,9 @@ public class InventoryCell : MonoBehaviour
     {
         index = ind;
         name = na;
-        nameLabel.text = name;
-        image.color = BubbleManager.Instance.emotionBubbleInfoDict[na].color;
+        var info = BubbleManager.Instance.emotionBubbleInfoDict[name];
+        nameLabel.text = info.displayName;
+        image.color = info.color;
     }
 
     // Update is called once per frame

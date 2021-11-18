@@ -22,6 +22,40 @@ public class ActionBubbleInfo:BubbleInfo
     public Dictionary<string, float> successAttribute;
     public Dictionary<string, float> failedAttribute;
     public int gameProcess;
+
+    public Dictionary<string, float> isLockedBy;
+    public int happy;
+    public int sad;
+    public int angry;
+    public int afraid;
+    public int excited;
+    public int calm;
+    public string category;
+
+    public int getEmotionRequirement(string emo)
+    {
+        switch (emo)
+        {
+            case "happy":
+                return happy;
+            case "sad":
+                return sad;
+            case "angry":
+                return angry;
+            case "afraid":
+                return afraid;
+            case "excited":
+                return excited;
+            case "calm":
+                return calm;
+        }
+        Debug.LogError("wrong emotion required"+ emo);
+        return 0;
+    }
+
+
+    public int finishedTime;
+    public bool isUnlocked;
 }
 
 
@@ -29,6 +63,8 @@ public class EmotionBubbleInfo: BubbleInfo
 {
     public string colorString;
     public Color color { get { return Utils.ToColor(colorString); } }
+    public int deprecated;
+    public bool isUsed { get { return deprecated != 1; } }
 }
 
 
@@ -37,8 +73,10 @@ public class BubbleManager : Singleton<BubbleManager>
     public List<Color> emotionIdToColor = new List<Color> {Color.red,Color.blue };
     public Transform generateTransform;
     Transform[] generateTransforms;
+    public List<string> gameIdeas = new List<string>();
     public Dictionary<string, ActionBubbleInfo> actionBubbleInfoDict = new Dictionary<string, ActionBubbleInfo>();
     public Dictionary<string, EmotionBubbleInfo> emotionBubbleInfoDict = new Dictionary<string, EmotionBubbleInfo>();
+    public Dictionary<string, List<string>> categoryToIds = new Dictionary<string, List<string>>();
 
     public float emotionGenerateTime = 1;
     public float ideaGenerateTime = 2; 
@@ -54,12 +92,30 @@ public class BubbleManager : Singleton<BubbleManager>
         foreach (var info in actionBubbles)
         {
             actionBubbleInfoDict[info.name] = info;
+            if (info.isLockedBy.Count == 0)
+            {
+                info.isUnlocked = true;
+
+                if (!categoryToIds.ContainsKey(info.category))
+                {
+                    categoryToIds[info.category] = new List<string>();
+                }
+                categoryToIds[info.category].Add(info.name);
+                if (info.gameProcess == 1)
+                {
+                    gameIdeas.Add(info.name);
+                }
+            }
         }
 
         var emotionBubbles = CsvUtil.LoadObjects<EmotionBubbleInfo>("Emotion");
         foreach (var info in emotionBubbles)
         {
-            emotionBubbleInfoDict[info.name] = info;
+            if (info.isUsed)
+            {
+
+                emotionBubbleInfoDict[info.name] = info;
+            }
         }
     }
 
@@ -98,7 +154,8 @@ public class BubbleManager : Singleton<BubbleManager>
     }
     public void ideaBubbleGeneration()
     {
-        var picked = Utils.pickRandomWithProbability(DevelopGameStageManager.Instance.currentStageInfo().ideas,10);
+        var picked = Utils.randomFromList(gameIdeas);
+       // var picked = Utils.pickRandomWithProbability(DevelopGameStageManager.Instance.currentStageInfo().ideas,10);
         if (picked!=default(string))
         {
             actionBubbleGeneration(actionBubbleInfoDict[picked]);
@@ -130,7 +187,16 @@ public class BubbleManager : Singleton<BubbleManager>
     {
         if (actionBubbleInfoDict.ContainsKey(bubbleName))
         {
-            return actionBubbleGeneration(actionBubbleInfoDict[bubbleName], position);
+            if (categoryToIds.ContainsKey(bubbleName))
+            {
+
+                return actionBubbleGeneration(actionBubbleInfoDict[Utils.randomFromList(categoryToIds[ bubbleName])], position);
+            }
+            else
+            {
+
+                Debug.LogError("wrong catelog name to generate " + bubbleName);
+            }
         }else if (emotionBubbleInfoDict.ContainsKey(bubbleName))
         {
 

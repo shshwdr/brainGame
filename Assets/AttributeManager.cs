@@ -7,7 +7,9 @@ using UnityEngine;
 public class AttributeInfo : BaseInfo
 {
     public float value;
-    public bool isGame;
+    public int isGame;
+    public int deprecated;
+    public bool isUsed { get { return deprecated != 1; } }
 }
 
 
@@ -38,7 +40,7 @@ public class AttributeManager : Singleton<AttributeManager>
         foreach (var info in actionBubbles)
         {
             attributeDict[info.name] = info;
-            if (info.isGame)
+            if (info.isGame == 1)
             {
                 gameAttributes.Add(info.name);
             }
@@ -70,7 +72,7 @@ public class AttributeManager : Singleton<AttributeManager>
     {
         foreach(var pair in attributeDict.Keys)
         {
-            if (!attributeDict[pair].isGame)
+            if (!(attributeDict[pair].isGame == 1))
             {
                 attributeDict[pair].value -= amount;
 

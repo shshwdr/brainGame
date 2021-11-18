@@ -13,9 +13,10 @@ public class EmotionRequirementCell:MonoBehaviour
     public Image image;
     public void init( string  emotionType, int requirement)
     {
+        var info = BubbleManager.Instance.emotionBubbleInfoDict[emotionType];
             //image.color = BubbleManager.Instance.emotionIdToColor[emotionType];
-            label.text = emotionType+ requirement.ToString();
-        image.color = BubbleManager.Instance. emotionBubbleInfoDict[emotionType].color;
+            label.text = info .displayName+ requirement.ToString();
+        image.color = info.color;
 
     }
 
