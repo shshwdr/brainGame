@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfb625dba47e344c88c54a76d5f222c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rend: {fileID: 0}
   nameLable: {fileID: 607079936134636615}
   isActionBubble: 0
+  symbol: 0
+  value: 0
+  emotionType: 0
 --- !u!1001 &607079937010564290
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21,6 +25,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 896374289, guid: 13984472654b46644994318d2eeaee6c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1012242563, guid: 13984472654b46644994318d2eeaee6c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6172385534595432962, guid: 13984472654b46644994318d2eeaee6c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -65,6 +77,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6172385534595432963, guid: 13984472654b46644994318d2eeaee6c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: cc5f9acc5f3023c409d9163c07a02492, type: 3}
     - target: {fileID: 6172385534595432973, guid: 13984472654b46644994318d2eeaee6c, type: 3}
       propertyPath: m_Name
       value: ingredientBubble

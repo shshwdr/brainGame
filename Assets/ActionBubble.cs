@@ -1,18 +1,23 @@
 ﻿using Pool;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ActionBubble : Bubble
 {
     public ActionBubbleInfo info;
     float currentValue;
-
+    public SpriteRenderer outputRender;
 
     public EmotionRequirementCell[] emotionRequirementCells;
 
     void OnMouseDown()
     {
+        if (PauseButtonController.Instance.isPaused)
+        {
+            return;
+        }
         if (canFinish())
         {
             consume();
@@ -64,7 +69,7 @@ public class ActionBubble : Bubble
         }
         else
         {
-            rend.color = Color.gray;
+            rend.color = Color.white;
         }
     }
     bool canFinish()
@@ -117,6 +122,9 @@ public class ActionBubble : Bubble
         base.init(inf);
         emotionRequirementCells = GetComponentsInChildren<EmotionRequirementCell>();
         info = (ActionBubbleInfo)inf;
+
+        var firstAward = info.successAttribute.Keys.ToList()[0];
+        outputRender.sprite = AttributeManager.Instance.attributeDict[firstAward].icon ;
         isActionBubble = true;
         int i = 0;
         //var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[inf.name];
@@ -152,7 +160,8 @@ public class ActionBubble : Bubble
     }
     public void succeed()
     {
-        AttributeManager.Instance.addAttributes(info.successAttribute);
+        CollectionManager.Instance.AddCoins(transform.position, info.successAttribute);
+       // AttributeManager.Instance.addAttributes(info.successAttribute);
         //Inventory.Instance.consumeItems(info.failedAttribute);
         //var pickedResult = (ActionResult)BubbleManager.pickInfoWithProbability(info.successAttribute);
         string finalLog = info.log[0] + LogController.Instance.getActionLog(info.name, 1);

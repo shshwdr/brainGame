@@ -19,7 +19,15 @@ public class InventoryCell : MonoBehaviour
 
     void onClick()
     {
-        Inventory.Instance.consumeItem(index);
+        if (PauseButtonController.Instance.isPaused)
+        {
+            return;
+        }
+        if (index >= 0)
+        {
+
+            Inventory.Instance.consumeItem(index);
+        }
     }
 
     public void init(int ind, string na)
@@ -27,8 +35,16 @@ public class InventoryCell : MonoBehaviour
         index = ind;
         name = na;
         var info = BubbleManager.Instance.emotionBubbleInfoDict[name];
-        nameLabel.text = info.displayName;
-        image.color = info.color;
+       // nameLabel.text = info.displayName;
+        image.sprite = Resources.Load<Sprite>("icons/" + name);
+        //image.color = Color.white;
+    }
+
+    public void initDark()
+    {
+        index = -1;
+        image.sprite = Resources.Load<Sprite>("icons/star_dark");
+        //image.color = Color.black;
     }
 
     // Update is called once per frame

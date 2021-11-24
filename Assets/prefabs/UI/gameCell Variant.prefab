@@ -11,9 +11,13 @@ PrefabInstance:
       propertyPath: name
       value: "\u73A9\u6CD5"
       objectReference: {fileID: 0}
+    - target: {fileID: 8931240507606442466, guid: 8a6c59e869c406b47ad05d9ec55a7f6a, type: 3}
+      propertyPath: m_FillMethod
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8931240508612781372, guid: 8a6c59e869c406b47ad05d9ec55a7f6a, type: 3}
       propertyPath: m_Name
-      value: gameCell
+      value: gameCell Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8931240508612781373, guid: 8a6c59e869c406b47ad05d9ec55a7f6a, type: 3}
       propertyPath: m_Pivot.x
@@ -45,11 +49,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8931240508612781373, guid: 8a6c59e869c406b47ad05d9ec55a7f6a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 80
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8931240508612781373, guid: 8a6c59e869c406b47ad05d9ec55a7f6a, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 30
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8931240508612781373, guid: 8a6c59e869c406b47ad05d9ec55a7f6a, type: 3}
       propertyPath: m_LocalPosition.x

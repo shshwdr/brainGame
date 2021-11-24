@@ -1,8 +1,8 @@
-﻿name,displayName,isGame,deprecated
-财富,财富,0,0
-关系,关系,0,0
-体力,体力,0,0
-心情,心情,0,1
-玩法,玩法,1,0
-感官,感官,1,0
-程序,程序,1,0
+﻿name,displayName,isGame,deprecated,iconString
+财富,财富,0,0,6
+关系,关系,0,0,8
+体力,体力,0,0,7
+心情,心情,0,1,lolipop
+玩法,玩法,1,0,11
+感官,感官,1,0,10
+程序,程序,1,0,9

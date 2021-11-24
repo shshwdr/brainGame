@@ -9,6 +9,10 @@ public class AttributeInfo : BaseInfo
     public float value;
     public int isGame;
     public int deprecated;
+    public string iconString;
+    public Sprite icon { get { return Resources.Load<Sprite>("icons/" + iconString + "_2"); } }
+    public Sprite emptyIcon { get { return Resources.Load<Sprite>("icons/" + iconString + "_1"); } }
+    public Sprite textIcon { get { return Resources.Load<Sprite>("icons/" + iconString + "_3"); } }
     public bool isUsed { get { return deprecated != 1; } }
 }
 
@@ -16,6 +20,7 @@ public class AttributeInfo : BaseInfo
 public class AttributeManager : Singleton<AttributeManager>
 {
     public Dictionary<string,AttributeInfo> attributeDict = new Dictionary<string, AttributeInfo>();
+    public Dictionary<string, Transform> attributeCellTrans = new Dictionary<string, Transform>();
 
     List<string> gameAttributes = new List<string>();
 

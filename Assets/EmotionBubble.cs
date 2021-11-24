@@ -18,7 +18,8 @@ public class EmotionBubble : Bubble
         //emotionType = inf.name == "高兴" ? 0 : 1;
         //rend.color = BubbleManager.Instance.emotionIdToColor[emotionType];
         info = (EmotionBubbleInfo)inf;
-        rend.color = info.color;
+        //rend.color = info.color;
+        rend.sprite = Resources.Load<Sprite>("icons/" + info.name);
        // GetComponent<SpriteRenderer>().color = Color.blue;
     }
     // Start is called before the first frame update
@@ -28,6 +29,10 @@ public class EmotionBubble : Bubble
     }
     void OnMouseDown()
     {
+        if (PauseButtonController.Instance.isPaused)
+        {
+            return;
+        }
         //Debug.Log("on mouse down");
         if (Inventory.Instance.canAddItem(info.name))
         {

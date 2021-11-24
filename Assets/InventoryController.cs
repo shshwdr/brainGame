@@ -13,10 +13,10 @@ public class InventoryController : MonoBehaviour
         cells = GetComponentsInChildren<InventoryCell>();
         foreach (var cell in cells)
         {
-            cell.gameObject.SetActive(false);
+            cell.initDark();
         }
 
-        content.gameObject.SetActive(false);
+        //content.gameObject.SetActive(false);
         EventPool.OptIn("inventoryChanged", onUpdateInventory);
     }
 
@@ -26,12 +26,13 @@ public class InventoryController : MonoBehaviour
         int i = 0;
         for (; i < Mathf.Min(Inventory.Instance.itemList.Count, cells.Length); i++)
         {
-            cells[i].gameObject.SetActive(true);
+            //cells[i].gameObject.SetActive(true);
             cells[i].init(i,Inventory.Instance.itemList[i]);
         }
         for (; i < cells.Length; i++)
         {
-            cells[i].gameObject.SetActive(false);
+            //cells[i].gameObject.SetActive(false);
+            cells[i].initDark();
         }
     }
 

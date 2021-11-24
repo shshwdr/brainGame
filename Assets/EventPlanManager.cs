@@ -37,7 +37,7 @@ public class EventPlanManager : Singleton<EventPlanManager>
     int currentEventId = 0;
     public EventPlanInfo currentEvent
     {
-        get { return eventPlanInfoList[currentEventId]; }
+        get { return eventPlanInfoList[Mathf.Min( currentEventId, eventPlanInfoList.Count-1)]; }
     }
 
 
@@ -54,48 +54,60 @@ public class EventPlanManager : Singleton<EventPlanManager>
     {
         currentDay += 1;
 
-        checkAndUpdateEvent();
-
+        if (currentEvent.date == currentDay)
+        {
+            checkAndUpdateEvent();
+        }
         EventPool.Trigger("gameStageUpdate");
     }
-    void checkAndUpdateEvent()
+
+    public bool isLastEvent()
     {
-        if(currentEvent.date == currentDay)
-        {
-
-            finishCurrentEvent();
-
-            currentEventId++;
-            updateEvent();
-        }
+        return currentEventId >= eventPlanInfoList.Count;
     }
 
-    void finishCurrentEvent()
+    public bool canFinishEvent()
     {
         bool succeed = true;
         foreach (var pair in currentEvent.requirement)
         {
-            if(AttributeManager.Instance.getAttributeValue(pair.Key)< pair.Value)
+            if (AttributeManager.Instance.getAttributeValue(pair.Key) < pair.Value)
             {
                 succeed = false;
                 break;
             }
         }
-        if (succeed)
+        return succeed;
+    }
+
+    public void checkAndUpdateEvent()
+    {
+
+            finishCurrentEvent();
+
+            currentEventId++;
+            updateEvent();
+    }
+
+    void finishCurrentEvent()
+    {
+        
+        if (canFinishEvent())
         {
             LogController.Instance.addLog(currentEvent.successLog);
-            foreach (var pair in currentEvent.successReward)
-            {
-                AttributeManager.Instance.addAttribute(pair.Key, pair.Value);
-            }
+            CollectionManager.Instance.AddCoins(transform.position, currentEvent.successReward);
+            //foreach (var pair in currentEvent.successReward)
+            //{
+            //    AttributeManager.Instance.addAttribute(pair.Key, pair.Value);
+            //}
         }
         else
         {
             LogController.Instance.addLog(currentEvent.failedLog); 
-            foreach (var pair in currentEvent.failedReward)
-            {
-                AttributeManager.Instance.addAttribute(pair.Key, pair.Value);
-            }
+            //foreach (var pair in currentEvent.failedReward)
+            //{
+            //    AttributeManager.Instance.addAttribute(pair.Key, pair.Value);
+            //}
         }
     }
 
@@ -110,7 +122,6 @@ public class EventPlanManager : Singleton<EventPlanManager>
     // Start is called before the first frame update
     void Start()
     {
-
         updateEvent();
         EventPool.Trigger("gameStageUpdate");
     }
