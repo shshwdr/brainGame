@@ -1,7 +1,7 @@
-﻿name,displayName,colorString,deprecated,icon
-happy,高兴,yellow,,happy
-sad,悲伤,blue,,happy
-angry,愤怒,red,,happy
-afraid,恐惧,black,,happy
+﻿name,displayName,colorString,deprecated,iconString
+happy,高兴,yellow,,102
+sad,悲伤,blue,,103
+angry,愤怒,red,,101
+afraid,恐惧,black,,104
 excited,兴奋,black,1,happy
 calm,冷静,black,1,happy

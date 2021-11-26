@@ -65,6 +65,8 @@ public class EmotionBubbleInfo: BubbleInfo
     public Color color { get { return Utils.ToColor(colorString); } }
     public int deprecated;
     public bool isUsed { get { return deprecated != 1; } }
+    public Sprite icon { get { return Resources.Load<Sprite>("icons/" + iconString ); } }
+    public string iconString;
 }
 
 

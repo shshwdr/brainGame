@@ -18,7 +18,7 @@ public class EmotionRequirementCell:MonoBehaviour
         //image.color = BubbleManager.Instance.emotionIdToColor[emotionType];
         label.text = requirement.ToString();
         //image.color = info.color;
-        render.sprite = Resources.Load<Sprite>("icons/" + info.name);
+        render.sprite = info.icon;
 
     }
 

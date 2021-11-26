@@ -10,6 +10,7 @@ public class Bubble : MonoBehaviour
     Vector3 prevFingerPosition = Vector3.zero;
     CircleCollider2D collider;
     Rigidbody2D rb;
+    public AudioClip audioClip;
 
     public TMP_Text nameLable;
 

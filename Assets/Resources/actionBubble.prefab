@@ -34,23 +34,6 @@ Transform:
   m_Father: {fileID: 5562573329974423105}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8923358127310653053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5562573329974423118}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18a0b7996f660248a4dc8fae985f511, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rend: {fileID: 0}
-  nameLable: {fileID: 1772884469094053062}
-  isActionBubble: 0
-  outputRender: {fileID: 7305053178730255630}
-  emotionRequirementCells: []
 --- !u!1 &5310444195293314653
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,6 +116,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8923358127310653053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5562573329974423118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18a0b7996f660248a4dc8fae985f511, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rend: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: af4bb7bca8b67364eae45fb8cb3224e1, type: 3}
+  nameLable: {fileID: 1772884469094053062}
+  isActionBubble: 0
+  outputRender: {fileID: 7305053178730255630}
+  emotionRequirementCells: []
 --- !u!1 &9090604678985072748
 GameObject:
   m_ObjectHideFlags: 0

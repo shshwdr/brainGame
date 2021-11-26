@@ -19,7 +19,7 @@ public class EmotionBubble : Bubble
         //rend.color = BubbleManager.Instance.emotionIdToColor[emotionType];
         info = (EmotionBubbleInfo)inf;
         //rend.color = info.color;
-        rend.sprite = Resources.Load<Sprite>("icons/" + info.name);
+        rend.sprite = info.icon;
        // GetComponent<SpriteRenderer>().color = Color.blue;
     }
     // Start is called before the first frame update
@@ -37,6 +37,7 @@ public class EmotionBubble : Bubble
         if (Inventory.Instance.canAddItem(info.name))
         {
 
+            MusicManager.Instance.playOneShot(audioClip);
             Inventory.Instance.addItem(info.name);
             Destroy(gameObject);
         }

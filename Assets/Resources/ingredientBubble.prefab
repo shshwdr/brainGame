@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rend: {fileID: 0}
+  audioClip: {fileID: 8300000, guid: e4c09db87240e8a4481ac8352c59239b, type: 3}
   nameLable: {fileID: 607079936134636615}
   isActionBubble: 0
   symbol: 0

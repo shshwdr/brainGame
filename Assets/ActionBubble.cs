@@ -20,6 +20,7 @@ public class ActionBubble : Bubble
         }
         if (canFinish())
         {
+            MusicManager.Instance.playOneShot(audioClip);
             consume();
             succeed();
             unlockOthers();

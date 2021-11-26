@@ -16,11 +16,11 @@ public class LogController : Singleton<LogController>
 {
     public Transform content;
     ScrollRect scrollRect;
+    static float originX = 10;
     public Dictionary<string, Dictionary<int,List<string>>> actionBubbleInfoDict = new Dictionary<string, Dictionary<int, List<string>>>();
 
     private void Awake()
     {
-
         var logs = CsvUtil.LoadObjects<ActionLog>("Log");
         foreach (var info in logs)
         {
@@ -50,11 +50,11 @@ public class LogController : Singleton<LogController>
 
     public static void ScrollToTop(ScrollRect scrollRect)
     {
-        scrollRect.normalizedPosition = new Vector2(0, 1);
+        scrollRect.normalizedPosition = new Vector2( originX, 1);
     }
     public static void ScrollToBottom(ScrollRect scrollRect)
     {
-        scrollRect.normalizedPosition = new Vector2(0, 0);
+        scrollRect.normalizedPosition = new Vector2(originX, 0);
     }
 
     public void addLog(string str)

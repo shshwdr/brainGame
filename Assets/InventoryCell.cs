@@ -36,7 +36,7 @@ public class InventoryCell : MonoBehaviour
         name = na;
         var info = BubbleManager.Instance.emotionBubbleInfoDict[name];
        // nameLabel.text = info.displayName;
-        image.sprite = Resources.Load<Sprite>("icons/" + name);
+        image.sprite = info.icon;
         //image.color = Color.white;
     }
 

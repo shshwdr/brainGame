@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class EventPlanController : MonoBehaviour
 {
-    public TMP_Text dayLabel;
+    public TMP_Text dayLabel1;
+    public TMP_Text dayLabel2;
     public TMP_Text eventLabel;
     AttributeRequirementCell[] attributeRequirementCells;
 
@@ -25,7 +26,10 @@ public class EventPlanController : MonoBehaviour
 
     public void onDayUpdate()
     {
-        dayLabel.text = "第" + EventPlanManager.Instance.currentDay.ToString() + "/30 天";
+        int currentDay = EventPlanManager.Instance.currentDay;
+        int leftDay = 31 - currentDay;
+        dayLabel1.text = (leftDay / 10).ToString();
+        dayLabel2.text = (leftDay % 10).ToString();
         var currentEvent = EventPlanManager.Instance.currentEvent;
         //eventLabel.text = string.Format( currentEvent.displayName, currentEvent.date, currentEvent.requiredString) + " （还剩"+(currentEvent.date - EventPlanManager.Instance.currentDay)+"天）";
         var eventLeftTime = (currentEvent.date - EventPlanManager.Instance.currentDay);
