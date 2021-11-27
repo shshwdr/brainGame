@@ -47,7 +47,7 @@ public class ActionBubble : Bubble
                 if (canUnlock)
                 {
                     value.isUnlocked = true;
-                    LogController.Instance.addLog("新想法解锁：" + value.displayName);
+                    LogController.Instance.addLog("新想法解锁：" + value.displayName,Color.yellow);
                     if (!BubbleManager.Instance.categoryToIds.ContainsKey(value.category))
                     {
                         BubbleManager.Instance.categoryToIds[value.category] = new List<string>();
@@ -166,7 +166,7 @@ public class ActionBubble : Bubble
         //Inventory.Instance.consumeItems(info.failedAttribute);
         //var pickedResult = (ActionResult)BubbleManager.pickInfoWithProbability(info.successAttribute);
         string finalLog = info.log[0] + LogController.Instance.getActionLog(info.name, 1);
-        LogController.Instance.addLog(finalLog, Color.green);
+        LogController.Instance.addLog(finalLog);
         if (info.gameProcess > 0)
         {
             // DevelopGameStageManager.Instance.addProcess(3);

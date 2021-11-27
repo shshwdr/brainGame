@@ -47,7 +47,7 @@ public class DefaultDayManager : Singleton<DefaultDayManager>
                 currentDayTimeId = 0;
                 currentDayTimeInterval = -(float)GameManager.Instance.data["dayIntervalTime"];
                 AttributeManager.Instance.reduceAllAttributes((int)GameManager.Instance.data["attributeReduceADay"]);
-                LogController.Instance.addLog("一天过去了，各项属性都减少了", Color.yellow);
+                LogController.Instance.addLog("一天过去了，各项属性都减少了", Color.red);
             }
         }
     }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sinbad;
 using System.Collections;
 using System.Collections.Generic;
@@ -54,7 +55,9 @@ public class LogController : Singleton<LogController>
     }
     public static void ScrollToBottom(ScrollRect scrollRect)
     {
-        scrollRect.normalizedPosition = new Vector2(originX, 0);
+        DOTween.To(() => scrollRect.normalizedPosition, x => scrollRect.normalizedPosition = x, new Vector2(originX, 0), 0.5f);
+
+        //scrollRect.normalizedPosition = new Vector2(originX, 0);
     }
 
     public void addLog(string str)
@@ -68,13 +71,17 @@ public class LogController : Singleton<LogController>
         go.GetComponent<LogPanel>().init(str,color);
         go.transform.parent = content;
 
-        StartCoroutine(test());
+        StartCoroutine(test(go));
     }
 
-    IEnumerator test()
+    IEnumerator test(GameObject go)
     {
-        yield return new WaitForSeconds(0.1f);
-        if (scrollRect.GetComponent<RectTransform>().rect.height <= content.GetComponent<RectTransform>().rect.height)
+        yield return new WaitForSeconds(0.01f);
+        go.SetActive(false);
+        go.SetActive(true);
+
+        //yield return new WaitForSeconds(0.1f);
+       // if (scrollRect.GetComponent<RectTransform>().rect.height <= content.GetComponent<RectTransform>().rect.height)
         {
             ScrollToBottom(scrollRect);
         }

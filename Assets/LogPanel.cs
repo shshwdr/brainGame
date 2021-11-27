@@ -17,7 +17,7 @@ public class LogPanel : MonoBehaviour
     public void init(string str, Color color)
     {
         logLabel.text = str;
-        panelImage.color = color;
+        logLabel.color = color;
     }
 
     // Update is called once per frame

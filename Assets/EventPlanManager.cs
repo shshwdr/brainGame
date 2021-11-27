@@ -94,7 +94,7 @@ public class EventPlanManager : Singleton<EventPlanManager>
         
         if (canFinishEvent())
         {
-            LogController.Instance.addLog(currentEvent.successLog);
+            LogController.Instance.addLog(currentEvent.successLog,Color.green);
             CollectionManager.Instance.AddCoins(transform.position, currentEvent.successReward);
             //foreach (var pair in currentEvent.successReward)
             //{
@@ -103,7 +103,7 @@ public class EventPlanManager : Singleton<EventPlanManager>
         }
         else
         {
-            LogController.Instance.addLog(currentEvent.failedLog); 
+            LogController.Instance.addLog(currentEvent.failedLog,Color.red); 
             //foreach (var pair in currentEvent.failedReward)
             //{
             //    AttributeManager.Instance.addAttribute(pair.Key, pair.Value);
