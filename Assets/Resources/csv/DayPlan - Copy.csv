@@ -1,4 +1,0 @@
-identifier,name,description
-player,player,"This is the player, the hero, whatever you call him."
-wall,wall,"This is a wall, it is use to tell that you cannot walk through here."
-monster,monster,This is a monster. Player kills monsters to get XP and gold.

@@ -22,32 +22,32 @@ public class LogController : Singleton<LogController>
 
     private void Awake()
     {
-        var logs = CsvUtil.LoadObjects<ActionLog>("Log");
-        foreach (var info in logs)
-        {
-            if (!actionBubbleInfoDict.ContainsKey(info.idea)){
+        //var logs = CsvUtil.LoadObjects<ActionLog>("Log");
+        //foreach (var info in logs)
+        //{
+        //    if (!actionBubbleInfoDict.ContainsKey(info.idea)){
 
-                actionBubbleInfoDict[info.idea] = new Dictionary<int, List<string>>();
-            }
+        //        actionBubbleInfoDict[info.idea] = new Dictionary<int, List<string>>();
+        //    }
 
-            actionBubbleInfoDict[info.idea][info.success] = info.log;
-        }
+        //    actionBubbleInfoDict[info.idea][info.success] = info.log;
+        //}
     }
 
-    public string getActionLog(string actionName, int success)
-    {
-        if (!actionBubbleInfoDict.ContainsKey(actionName))
-        {
-            Debug.LogError("action name does not exist in log " + actionName);
-            return "";
-        }
-        if (!actionBubbleInfoDict[actionName].ContainsKey(success))
-        {
-            Debug.LogError("action success does not exist in log " + actionName+" "+success);
-            return "";
-        }
-        return Utils.randomFromList( actionBubbleInfoDict[actionName][success]);
-    }
+    //public string getActionLog(string actionName, int success)
+    //{
+    //    if (!actionBubbleInfoDict.ContainsKey(actionName))
+    //    {
+    //        Debug.LogError("action name does not exist in log " + actionName);
+    //        return "";
+    //    }
+    //    if (!actionBubbleInfoDict[actionName].ContainsKey(success))
+    //    {
+    //        Debug.LogError("action success does not exist in log " + actionName+" "+success);
+    //        return "";
+    //    }
+    //    return Utils.randomFromList( actionBubbleInfoDict[actionName][success]);
+    //}
 
     public static void ScrollToTop(ScrollRect scrollRect)
     {
@@ -60,28 +60,40 @@ public class LogController : Singleton<LogController>
         //scrollRect.normalizedPosition = new Vector2(originX, 0);
     }
 
-    public void addLog(string str)
+    public void addLog(string str, bool immediate = false)
     {
-        addLog(str, Color.white);
+        addLog(str, Color.white,immediate);
     }
-    public void addLog(string str,Color color)
+    public void addLog(string str,Color color,bool immediate = false)
     {
         var logPrefab = Resources.Load<GameObject>("log");
         var go = Instantiate(logPrefab);
         go.GetComponent<LogPanel>().init(str,color);
         go.transform.parent = content;
 
-        StartCoroutine(test(go));
+        if (!immediate)
+        {
+            StartCoroutine(test(go));
+        }
+        else
+        {
+            updateUI(go);
+        }
     }
 
     IEnumerator test(GameObject go)
     {
         yield return new WaitForSeconds(0.01f);
+        updateUI(go);
+    }
+
+    void updateUI(GameObject go)
+    {
         go.SetActive(false);
         go.SetActive(true);
 
         //yield return new WaitForSeconds(0.1f);
-       // if (scrollRect.GetComponent<RectTransform>().rect.height <= content.GetComponent<RectTransform>().rect.height)
+        // if (scrollRect.GetComponent<RectTransform>().rect.height <= content.GetComponent<RectTransform>().rect.height)
         {
             ScrollToBottom(scrollRect);
         }

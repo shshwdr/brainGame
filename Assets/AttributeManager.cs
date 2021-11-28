@@ -19,6 +19,7 @@ public class AttributeInfo : BaseInfo
 
 public class AttributeManager : Singleton<AttributeManager>
 {
+    public List <AttributeInfo> attributeList;
     public Dictionary<string,AttributeInfo> attributeDict = new Dictionary<string, AttributeInfo>();
     public Dictionary<string, Transform> attributeCellTrans = new Dictionary<string, Transform>();
 
@@ -41,8 +42,8 @@ public class AttributeManager : Singleton<AttributeManager>
     // Start is called before the first frame update
     void Awake()
     {
-        var actionBubbles = CsvUtil.LoadObjects<AttributeInfo>("Attribute");
-        foreach (var info in actionBubbles)
+        attributeList = CsvUtil.LoadObjects<AttributeInfo>("Attribute");
+        foreach (var info in attributeList)
         {
             attributeDict[info.name] = info;
             if (info.isGame == 1)
@@ -73,6 +74,21 @@ public class AttributeManager : Singleton<AttributeManager>
         addOneAttribute(n, v);
         EventPool.Trigger("attributeUpdate");
     }
+    public bool canSurvive()
+    {
+        foreach (var pair in attributeDict.Keys)
+        {
+            if (!(attributeDict[pair].isGame == 1))
+            {
+                if(attributeDict[pair].value <= 0)
+                {
+                    return false;
+                }
+
+            }
+        }
+        return true;
+    }
     public void reduceAllAttributes(int amount)
     {
         foreach(var pair in attributeDict.Keys)
@@ -84,6 +100,7 @@ public class AttributeManager : Singleton<AttributeManager>
             }
         }
         EventPool.Trigger("attributeUpdate");
+        EventPool.Trigger("checkGameOver");
     }
     public void addAttributes(Dictionary<string,float> dict)
     {

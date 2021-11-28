@@ -72,6 +72,10 @@ public class Inventory : Singleton<Inventory>
 
     public bool canConsumeItems(ActionBubbleInfo actionInfo)
     {
+        if (CheatManager.Instance.hasUnlimitResource)
+        {
+            return true;
+        }
         Dictionary<string, int> requiredItems = new Dictionary<string, int>();
         foreach(var str in BubbleManager.Instance.emotionBubbleInfoDict.Keys)
         {

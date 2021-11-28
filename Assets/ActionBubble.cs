@@ -162,10 +162,10 @@ public class ActionBubble : Bubble
     public void succeed()
     {
         CollectionManager.Instance.AddCoins(transform.position, info.successAttribute);
-       // AttributeManager.Instance.addAttributes(info.successAttribute);
+        // AttributeManager.Instance.addAttributes(info.successAttribute);
         //Inventory.Instance.consumeItems(info.failedAttribute);
         //var pickedResult = (ActionResult)BubbleManager.pickInfoWithProbability(info.successAttribute);
-        string finalLog = info.log[0] + LogController.Instance.getActionLog(info.name, 1);
+        string finalLog = info.log[0];// + LogController.Instance.getActionLog(info.name, 1);
         LogController.Instance.addLog(finalLog);
         if (info.gameProcess > 0)
         {

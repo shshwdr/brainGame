@@ -35,6 +35,12 @@ public class EventPlanManager : Singleton<EventPlanManager>
     public Dictionary<string, EventPlanInfo> eventPlanInfoDict = new Dictionary<string, EventPlanInfo>();
     public List<EventPlanInfo> eventPlanInfoList;
     int currentEventId = 0;
+    int totalDay = 30;
+
+    public bool isLastDay()
+    {
+        return currentDay >= totalDay;
+    }
     public EventPlanInfo currentEvent
     {
         get { return eventPlanInfoList[Mathf.Min( currentEventId, eventPlanInfoList.Count-1)]; }
@@ -50,6 +56,17 @@ public class EventPlanManager : Singleton<EventPlanManager>
         //    eventPlanInfoDict[info.name] = info;
         //}
     }
+
+    public void gotoTheLastDay()
+    {
+        currentDay = totalDay ;
+
+        if (currentEvent.date == currentDay)
+        {
+            checkAndUpdateEvent();
+        }
+        EventPool.Trigger("gameStageUpdate");
+    }
     public void addDay()
     {
         currentDay += 1;
@@ -59,7 +76,13 @@ public class EventPlanManager : Singleton<EventPlanManager>
             checkAndUpdateEvent();
         }
         EventPool.Trigger("gameStageUpdate");
+
+        EventPool.Trigger("checkGameOver");
+
     }
+
+
+    
 
     public bool isLastEvent()
     {
