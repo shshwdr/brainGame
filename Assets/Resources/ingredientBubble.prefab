@@ -82,6 +82,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: cc5f9acc5f3023c409d9163c07a02492, type: 3}
+    - target: {fileID: 6172385534595432963, guid: 13984472654b46644994318d2eeaee6c, type: 3}
+      propertyPath: m_SortingLayer
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6172385534595432963, guid: 13984472654b46644994318d2eeaee6c, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -2074363419
+      objectReference: {fileID: 0}
     - target: {fileID: 6172385534595432973, guid: 13984472654b46644994318d2eeaee6c, type: 3}
       propertyPath: m_Name
       value: ingredientBubble

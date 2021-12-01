@@ -1,9 +1,13 @@
 {
-  "emotionBubbleGenerationTime":1.4,
-  "ideaBubbleGenerationTime":5,
-  "dayIdeaBubbleGenerationTime":4,
+  "emotionBubbleGenerationTime":2,
+  "ideaBubbleGenerationTime":10,
+  "collectionBubbleGenerationTime":15,
+  "dayIdeaBubbleGenerationTime":10,
   "attributeReduceADay":5,
-  "dayIntervalTime":15
+  "dayIntervalTime":10,
+  "maxAttributeValue":100,
+  "initialSurvivalAttributeValue":10,
+  "initialStarSlot":3
 
     
   }

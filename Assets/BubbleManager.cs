@@ -16,6 +16,14 @@ public class BubbleInfo:BaseInfo
 
 }
 
+public class CollectionBubbleInfo : ActionBubbleInfo
+{
+
+    public Sprite icon { get { return Resources.Load<Sprite>("icons/" + iconString); } }
+    public string iconString;
+}
+
+
 public class ActionBubbleInfo:BubbleInfo
 {
     public List<string> log;
@@ -78,13 +86,19 @@ public class BubbleManager : Singleton<BubbleManager>
     public List<string> gameIdeas = new List<string>();
     public Dictionary<string, ActionBubbleInfo> actionBubbleInfoDict = new Dictionary<string, ActionBubbleInfo>();
     public Dictionary<string, EmotionBubbleInfo> emotionBubbleInfoDict = new Dictionary<string, EmotionBubbleInfo>();
+    public Dictionary<string, CollectionBubbleInfo> collectionBubbleInfoDict = new Dictionary<string, CollectionBubbleInfo>();
     public Dictionary<string, List<string>> categoryToIds = new Dictionary<string, List<string>>();
 
+    public Transform collectionParentTransform;
+    public Dictionary<string, List<Transform>> collectionPositions = new Dictionary<string, List<Transform>>();
+
     public float emotionGenerateTime = 1;
-    public float ideaGenerateTime = 2; 
+    public float ideaGenerateTime = 2;
     public float dayIdeaGenerateTime = 2;
+    public float collectionGenerateTime = 2;
     float currentEmotionGenerateTime = 0;
     float currentIdeaGenerateTime = 0;
+    float currentCollectionGenerateTime = 0;
 
     void Awake()
     {
@@ -119,6 +133,24 @@ public class BubbleManager : Singleton<BubbleManager>
                 emotionBubbleInfoDict[info.name] = info;
             }
         }
+
+
+
+        foreach (Transform tran in collectionParentTransform)
+        {
+            collectionPositions[tran.name] = tran.GetComponentsInChildren<Transform>().ToList();
+            collectionPositions[tran.name].RemoveAt(0);
+        }
+
+        var collectionBubbles = CsvUtil.LoadObjects<CollectionBubbleInfo>("collection");
+        foreach (var info in collectionBubbles)
+        {
+            if (collectionPositions.ContainsKey(info.name))
+            {
+
+                collectionBubbleInfoDict[info.name] = info;
+            }
+        }
     }
 
     Vector3 getPosition()
@@ -150,6 +182,23 @@ public class BubbleManager : Singleton<BubbleManager>
         return result;
     }
 
+    public Bubble collectionBubbleGeneration(CollectionBubbleInfo bubbleInfo)
+    {
+        rabbishGeneration();
+        var rand = Random.Range(0, actionBubbleInfoDict.Count);
+        var bubblePrefab = Resources.Load<GameObject>("collectionBubble");
+       // if (position.Equals(Vector3.positiveInfinity))
+        //{
+            var position = getPosition();
+        //}
+        var go = Instantiate(bubblePrefab, position, Quaternion.identity, transform);
+        Bubble result = go.GetComponent<Bubble>();
+        result.init(bubbleInfo);
+        return result;
+    }
+
+    
+
     public Bubble actionBubbleGeneration(ActionBubbleInfo bubbleInfo)
     {
         return actionBubbleGeneration(bubbleInfo, Vector3.positiveInfinity);
@@ -161,6 +210,18 @@ public class BubbleManager : Singleton<BubbleManager>
         if (picked!=default(string))
         {
             actionBubbleGeneration(actionBubbleInfoDict[picked]);
+
+        }
+
+    }
+
+    public void collectionBubbleGeneration()
+    {
+        var picked = Utils.randomFromList(collectionBubbleInfoDict.Values.ToList());
+        // var picked = Utils.pickRandomWithProbability(DevelopGameStageManager.Instance.currentStageInfo().ideas,10);
+        //if (picked != default(string))
+        {
+            collectionBubbleGeneration(picked);
 
         }
 
@@ -187,18 +248,18 @@ public class BubbleManager : Singleton<BubbleManager>
 
     public Bubble specificBubbleGeneration(string bubbleName,Vector3 position)
     {
-        if (actionBubbleInfoDict.ContainsKey(bubbleName))
+        if (categoryToIds.ContainsKey(bubbleName))
         {
-            if (categoryToIds.ContainsKey(bubbleName))
-            {
+            //if (categoryToIds.ContainsKey(bubbleName))
+            //{
 
                 return actionBubbleGeneration(actionBubbleInfoDict[Utils.randomFromList(categoryToIds[ bubbleName])], position);
-            }
-            else
-            {
+            //}
+            //else
+            //{
 
-                Debug.LogError("wrong catelog name to generate " + bubbleName);
-            }
+                //Debug.LogError("wrong catelog name to generate " + bubbleName);
+            //}
         }else if (emotionBubbleInfoDict.ContainsKey(bubbleName))
         {
 
@@ -217,7 +278,15 @@ public class BubbleManager : Singleton<BubbleManager>
         emotionGenerateTime = (float)GameManager.Instance.data["emotionBubbleGenerationTime"];
         ideaGenerateTime = (float)GameManager.Instance.data["ideaBubbleGenerationTime"];
         dayIdeaGenerateTime = (float)GameManager.Instance.data["dayIdeaBubbleGenerationTime"];
+        collectionGenerateTime = (float)GameManager.Instance.data["collectionBubbleGenerationTime"];
 
+
+
+    }
+
+    public void reduceEmotionGenerationTime(float time)
+    {
+        emotionGenerateTime -= time;
     }
 
     // Update is called once per frame
@@ -239,6 +308,13 @@ public class BubbleManager : Singleton<BubbleManager>
         {
             currentIdeaGenerateTime = 0;
             ideaBubbleGeneration();
+        }
+
+        currentCollectionGenerateTime += Time.deltaTime;
+        if (currentCollectionGenerateTime >= collectionGenerateTime)
+        {
+            currentCollectionGenerateTime = 0;
+            collectionBubbleGeneration();
         }
 
 

@@ -18,6 +18,29 @@ public class InventoryController : MonoBehaviour
 
         //content.gameObject.SetActive(false);
         EventPool.OptIn("inventoryChanged", onUpdateInventory);
+        EventPool.OptIn("slotChanged", UpdateSlots);
+    }
+
+    void UpdateSlots()
+    {
+        var maxSlots = Inventory.Instance.maxCount;
+        if (maxSlots > cells.Length)
+        {
+            Debug.LogError("slot is larger than " + cells.Length);
+        }
+        int i;
+        for (i= 0;i< maxSlots; i++)
+        {
+
+            var cell = cells[i];
+            cell.gameObject.SetActive(true);
+        }
+        for (; i < cells.Length; i++)
+        {
+
+            var cell = cells[i];
+            cell.gameObject.SetActive(false);
+        }
     }
 
     void onUpdateInventory()

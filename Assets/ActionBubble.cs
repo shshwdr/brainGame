@@ -27,7 +27,7 @@ public class ActionBubble : Bubble
         }
     }
 
-    void unlockOthers()
+    protected virtual void unlockOthers()
     {
         info.finishedTime++;
         var bubbleInfoDict = BubbleManager.Instance.actionBubbleInfoDict;
@@ -121,16 +121,28 @@ public class ActionBubble : Bubble
     public override void init(BubbleInfo inf)
     {
         base.init(inf);
-        emotionRequirementCells = GetComponentsInChildren<EmotionRequirementCell>();
         info = (ActionBubbleInfo)inf;
 
-        var firstAward = info.successAttribute.Keys.ToList()[0];
-        outputRender.sprite = AttributeManager.Instance.attributeDict[firstAward].icon ;
-        isActionBubble = true;
+        if (info.successAttribute!=null&&info.successAttribute.Keys.ToList().Count > 0)
+        {
+
+            var firstAward = info.successAttribute.Keys.ToList()[0];
+            outputRender.sprite = AttributeManager.Instance.attributeDict[firstAward].icon;
+            isActionBubble = true;
+        }
+
+
+        initRequirements();
+
+    }
+
+    protected void initRequirements()
+    {
+        emotionRequirementCells = GetComponentsInChildren<EmotionRequirementCell>();
         int i = 0;
         //var expressionRanges = BubbleCalculator.Instance.ideaEmotionRelationship[inf.name];
 
-        foreach(var key in BubbleManager.Instance.emotionBubbleInfoDict.Keys)
+        foreach (var key in BubbleManager.Instance.emotionBubbleInfoDict.Keys)
         {
             if (info.getEmotionRequirement(key) > 0)
             {
@@ -144,13 +156,6 @@ public class ActionBubble : Bubble
         {
             emotionRequirementCells[i].gameObject.SetActive(false);
         }
-
-        //foreach(var emotionRequirementCell in emotionRequirementCells)
-        //{
-        //    emotionRequirementCell.init(expressionRanges[i],i);
-        //    i++;
-        //}
-
     }
     public void getReward(List<string> rewards)
     {
@@ -159,13 +164,13 @@ public class ActionBubble : Bubble
             BubbleManager.Instance.specificBubbleGeneration(rew,Vector3.positiveInfinity);
         }
     }
-    public void succeed()
+    public virtual void succeed()
     {
         CollectionManager.Instance.AddCoins(transform.position, info.successAttribute);
         // AttributeManager.Instance.addAttributes(info.successAttribute);
         //Inventory.Instance.consumeItems(info.failedAttribute);
         //var pickedResult = (ActionResult)BubbleManager.pickInfoWithProbability(info.successAttribute);
-        string finalLog = info.log[0];// + LogController.Instance.getActionLog(info.name, 1);
+        string finalLog = Utils.randomFromList(info.log);// + LogController.Instance.getActionLog(info.name, 1);
         LogController.Instance.addLog(finalLog);
         if (info.gameProcess > 0)
         {

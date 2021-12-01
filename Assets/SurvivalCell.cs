@@ -17,18 +17,21 @@ public class SurvivalCell : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AttributeManager.Instance.attributeCellTrans[name] = collectTransform;
-        var info = AttributeManager.Instance.attributeDict[name];
-        emptyImage.sprite = info.emptyIcon;
-        fullImage.sprite = info.icon;
-        textImage.sprite = info.textIcon;
-        onAttributeUpdate();
         EventPool.OptIn("attributeUpdate",onAttributeUpdate);
+        onAttributeUpdate();
     }
     void onAttributeUpdate()
     {
-        fullImage.fillAmount = AttributeManager.Instance.getAttributeValue(name) / 100f;
-        valueLabe.text = name+" " +AttributeManager.Instance.getAttributeValue(name).ToString();
+        if (AttributeManager.Instance.attributeDict.ContainsKey(name))
+        {
+            AttributeManager.Instance.attributeCellTrans[name] = collectTransform;
+            var info = AttributeManager.Instance.attributeDict[name];
+            emptyImage.sprite = info.emptyIcon;
+            fullImage.sprite = info.icon;
+            textImage.sprite = info.textIcon;
+            fullImage.fillAmount = AttributeManager.Instance.getAttributeValue(name) / (float)GameManager.Instance.data["maxAttributeValue"];
+            valueLabe.text = AttributeManager.Instance.getAttributeValue(name).ToString();
+        }
     }
     // Update is called once per frame
     void Update()

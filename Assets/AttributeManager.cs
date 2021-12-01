@@ -43,6 +43,10 @@ public class AttributeManager : Singleton<AttributeManager>
     void Awake()
     {
         attributeList = CsvUtil.LoadObjects<AttributeInfo>("Attribute");
+
+    }
+    private void Start()
+    {
         foreach (var info in attributeList)
         {
             attributeDict[info.name] = info;
@@ -52,9 +56,11 @@ public class AttributeManager : Singleton<AttributeManager>
             }
             else
             {
-                info.value = 50;
+                info.value = (int)GameManager.Instance.data["initialSurvivalAttributeValue"];
             }
         }
+
+        EventPool.Trigger("attributeUpdate");
     }
 
     public void addOneAttribute(string n, float v)

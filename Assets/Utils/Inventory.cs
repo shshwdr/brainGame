@@ -83,6 +83,8 @@ public class Inventory : Singleton<Inventory>
         }
         return canConsumeItems(requiredItems);
     }
+
+
     public void consumeItems(ActionBubbleInfo actionInfo)
     {
         Dictionary<string, int> requiredItems = new Dictionary<string, int>();
@@ -167,7 +169,17 @@ public class Inventory : Singleton<Inventory>
     //}
     // Start is called before the first frame update
 
+    private void Start()
+    {
+        maxCount = (int)GameManager.Instance.data["initialStarSlot"];
+        EventPool.Trigger("slotChanged");
+    }
 
+    public void addSlot(int amount)
+    {
+        maxCount += amount;
+        EventPool.Trigger("slotChanged");
+    }
     // Update is called once per frame
     void Update()
     {

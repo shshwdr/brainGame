@@ -118,7 +118,29 @@ public class EventPlanManager : Singleton<EventPlanManager>
         if (canFinishEvent())
         {
             LogController.Instance.addLog(currentEvent.successLog,Color.green);
-            CollectionManager.Instance.AddCoins(transform.position, currentEvent.successReward);
+
+            foreach(var pair in currentEvent.successReward)
+            {
+                switch (pair.Key)
+                {
+                    case "starSlot":
+                        Inventory.Instance.addSlot((int)pair.Value);
+                        break;
+                    case "starTime":
+                        BubbleManager.Instance.reduceEmotionGenerationTime(pair.Value);
+                        break;
+                    default:
+                        Debug.LogError("reward in event plan is not readable");
+                        break;
+
+
+
+                }
+
+            }
+
+
+            //CollectionManager.Instance.AddCoins(transform.position, currentEvent.successReward);
             //foreach (var pair in currentEvent.successReward)
             //{
             //    AttributeManager.Instance.addAttribute(pair.Key, pair.Value);

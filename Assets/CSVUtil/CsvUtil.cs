@@ -21,10 +21,29 @@ namespace Sinbad
         static char[] quotedChars = new char[] { ',', ';' };
         public static List<List<string>> LoadList(string filename, bool includeTitle)
         {
-            TextReader t;
             //var dbPath = "Assets/StreamingAssets/" + filename;
+            string text = "";
+#if UNITY_EDITOR
             var dbPath = path + filename;
-            var text = Resources.Load<TextAsset>("csv/" + filename).text;
+
+            text = Resources.Load<TextAsset>("csv/" + filename).text;
+#else
+            var m_path = Application.dataPath+ "/csv/" + filename+".csv";
+         if (File.Exists(m_path))
+         {
+             byte[] m_bytes = File.ReadAllBytes(m_path);
+ 
+             text = System.Text.Encoding.UTF8.GetString(m_bytes);
+ 
+             Debug.Log(text);
+         }else{
+            Debug.LogError(m_path);
+         }
+
+#endif
+
+
+
             var splitFile = new string[] { "\r\n", "\r", "\n" };
             var lines = text.Split(splitFile, StringSplitOptions.None);
             int lineId = 0;
@@ -35,7 +54,7 @@ namespace Sinbad
                 string header = lines[lineId];
                 lineId++;
             }
-            while (lineId <lines.Length-1)
+            while (lineId < lines.Length - 1)
             {
                 string line = lines[lineId];
                 lineId++;
@@ -64,32 +83,25 @@ namespace Sinbad
         //   fields as per the header. If false, ignores and just fills what it can
         public static List<T> LoadObjects<T>(string filename, bool strict = true) where T : new()
         {
-            //#if UNITY_EDITOR
-            var dbPath = path + filename;
-            //#else
-            //            var filepath = string.Format("{0}/{1}", path, filename);
-            //            if (!File.Exists(filepath))
-            //        {
-            //            Debug.Log("Database not in Persistent path");
-            //#if UNITY_ANDROID
-            //        var loadDb = new WWW("jar:file://" + Application.dataPath + "!/assets/" + filename);  // this is the path to your StreamingAssets in android
-            //            while (!loadDb.isDone) { }  // CAREFUL here, for safety reasons you shouldn't let this while loop unattended, place a timer and error check
-            //            // then save to Application.persistentDataPath
-            //            File.WriteAllBytes(filepath, loadDb.bytes);
-            //#else
-
-            //	var loadDb =  Application.streamingAssetsPath+"/"+ filename;  // this is the path to your StreamingAssets in iOS
-            //	// then save to Application.persistentDataPath
-            //	File.Copy(loadDb, filepath);
-            //#endif
-            //            Debug.Log("Database written");
-            //        }
-            //            var dbPath = filepath;
-            //#endif
-            //Debug.Log("Final PATH: " + dbPath);
-
             var ret = new List<T>();
-            var text = Resources.Load<TextAsset>("csv/" + filename).text;
+            string text = "";
+#if UNITY_EDITOR
+            var dbPath = path + filename;
+
+            text = Resources.Load<TextAsset>("csv/" + filename).text;
+#else
+            var m_path = Application.dataPath+ "/csv/" + filename+".csv";
+         if (File.Exists(m_path))
+         {
+             byte[] m_bytes = File.ReadAllBytes(m_path);
+ 
+             text = System.Text.Encoding.UTF8.GetString(m_bytes);
+ 
+             Debug.Log(text);
+         }else{
+            Debug.LogError(m_path);
+         }
+#endif
             var splitFile = new string[] { "\r\n", "\r", "\n" };
             var lines = text.Split(splitFile, StringSplitOptions.None);
             int lineId = 0;
@@ -98,7 +110,7 @@ namespace Sinbad
             var fieldDefs = ParseHeader(header);
             FieldInfo[] fi = typeof(T).GetFields();
             bool isValueType = typeof(T).IsValueType;
-            while (lineId < lines.Length-1)
+            while (lineId < lines.Length - 1)
             {
                 string line = lines[lineId];
                 lineId++;
@@ -423,7 +435,7 @@ namespace Sinbad
             {
                 Dictionary<string, float> res = new Dictionary<string, float>();
                 string[] pairs = strValue.Split('|');
-                if (strValue.Length>0)
+                if (strValue.Length > 0)
                 {
                     foreach (string pair in pairs)
                     {
@@ -446,7 +458,7 @@ namespace Sinbad
                         res[p[0]] = floatValue;
                     }
                 }
-                
+
                 return res;
             }
             else if (t == typeof(List<string>))
@@ -459,12 +471,12 @@ namespace Sinbad
                 }
                 return res;
             }
-            if(strValue == "")
+            if (strValue == "")
             {
                 strValue = "0";
             }
             var cv = TypeDescriptor.GetConverter(t);
-            
+
             return cv.ConvertFromInvariantString(strValue);
         }
 
