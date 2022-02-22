@@ -31,7 +31,14 @@ public class Bubble : MonoBehaviour
     {
         
     }
-
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "UpperCollider")
+        {
+            //explode
+            Destroy(gameObject);
+        }
+    }
     // Update is called once per frame
     void Update()
     {

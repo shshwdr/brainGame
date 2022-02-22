@@ -8,6 +8,7 @@ public class EventPlanInfo : BaseInfo
     public int date;
 
     public Dictionary<string, float> addRequirement;
+    public Dictionary<string, float> addRequirementPerDay;
     public Dictionary<string, float> successReward;
     public Dictionary<string, float> failedReward;
     public string successLog;
@@ -161,7 +162,12 @@ public class EventPlanManager : Singleton<EventPlanManager>
 
         foreach (var pair in currentEvent.addRequirement)
         {
-            currentEvent.requirement[pair.Key] = Mathf.Min(90, pair.Value + AttributeManager.Instance.getAttributeValue(pair.Key));
+            var eventLeftTime = (currentEvent.date - EventPlanManager.Instance.currentDay);
+            if (!currentEvent.addRequirementPerDay.ContainsKey(pair.Key))
+            {
+                Debug.LogError("add requirement missed value for key " + pair.Key + " in event " + currentEvent.displayName);
+            }
+            currentEvent.requirement[pair.Key] = Mathf.Min(90, pair.Value + currentEvent.addRequirementPerDay[pair.Key] * eventLeftTime + AttributeManager.Instance.getAttributeValue(pair.Key));
         }
     }
     // Start is called before the first frame update

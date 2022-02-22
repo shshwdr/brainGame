@@ -1,10 +1,12 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System.Collections.Generic;
 using System;
 using Random = UnityEngine.Random;
+using System.Linq;
+using System.Collections;
 
 public class CollectionManager : Singleton<CollectionManager>
 {
@@ -146,6 +148,26 @@ public class CollectionManager : Singleton<CollectionManager>
 			});
 		}
 
+	}
+    private void Start()
+    {
+
+		//MoveSource(new Vector3(0, 0, 0), new Vector3(1,1,0), AttributeManager.Instance.attributeDict.Values.ToList()[0].icon, 3, () =>
+		//{
+		//	//AttributeManager.Instance.addAttribute(pair.Key, 1);
+		//	//PlantsManager.Instance.currentResource[pair.Key] += 1;
+		//	//BeeManager.Instance.updateGenerateTime();
+		//	//PestManager.Instance.updateGenerateTime();
+		//	//TutorialManager.Instance.collectResource(pair.Key);
+		//});
+		//StartCoroutine(test());
+	}
+
+	IEnumerator  test()
+    {
+		yield return new WaitForSeconds(0.1f);
+
+		AddCoins(new Vector3(0, 0, 0), new Dictionary<string, float>() { { "财富", 5 } });
 	}
 
 }

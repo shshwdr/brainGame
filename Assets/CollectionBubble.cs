@@ -62,7 +62,7 @@ public class CollectionBubble : ActionBubble
             go.GetComponent<Collection>().init(info);
         }
         string finalLog = Utils.randomFromList( info.log);// + LogController.Instance.getActionLog(info.name, 1);
-        LogController.Instance.addLog(finalLog);
+        LogController.Instance.addLog(finalLog,Color.yellow);
         if (info.gameProcess > 0)
         {
             // DevelopGameStageManager.Instance.addProcess(3);

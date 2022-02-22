@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 using System.ComponentModel;
+using DG.Tweening;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -17,6 +18,7 @@ public class GameManager : Singleton<GameManager>
     // Start is called before the first frame update
     void Awake()
     {
+        DOTween.Init();
         var json_text = "";
 
 
@@ -44,5 +46,10 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         
+    }
+    private void Start()
+    {
+        //DOTween.Init();
+        //transform.DOMove(Vector3.zero, 1);
     }
 }
